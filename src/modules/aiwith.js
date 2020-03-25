@@ -4,14 +4,6 @@ import * as fileformats from './fileformats/index.js'
 import * as sgf from './fileformats/sgf'
 import {loggers} from 'winston'
 
-export function clearMainProperty(tree) {
-  tree.mutate(draft => {
-    for (let n of tree.listNodes()) {
-      draft.removeProperty(n.id, 'MAIN')
-    }
-  })
-}
-
 export function loadTreeFromData(content) {
   try {
     let gameTrees = sgf.parse(content, () => {})
@@ -41,8 +33,6 @@ export function loadTreeAppend(tree, mainTree) {
     return
   }
 
-  clearMainProperty(tree)
-
   let mainTreeNode = mainTree.root.children[0]
   if (mainTreeNode == null) {
     return
@@ -50,6 +40,10 @@ export function loadTreeAppend(tree, mainTree) {
 
   let nextTreePosition = tree.root.id
   let newTree = tree.mutate(draft => {
+    for (let n of tree.listNodes()) {
+      draft.removeProperty(n.id, 'MAIN')
+    }
+
     while (nextTreePosition != null && mainTreeNode != null) {
       nextTreePosition = draft.appendNode(nextTreePosition, {
         ...mainTreeNode.data,

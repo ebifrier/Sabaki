@@ -5,25 +5,6 @@ import * as aiwithgo from '../src/modules/aiwith.js'
 describe('aiwith', () => {
   let names = ['blank', 'pro', 'beginner', 'shodan']
 
-  describe('clearMainProperty', () => {
-    it('clear all', () => {
-      let filename = `${__dirname}/sgf/branch.sgf`
-      let tree = aiwithgo.loadTreeFromFile(filename)
-      assert.ok(tree != null)
-
-      tree.mutate(draft => {
-        for (let n of tree.listNodes()) {
-          draft.updateProperty(n.id, 'MAIN', [true])
-        }
-      })
-      aiwithgo.clearMainProperty(tree)
-
-      for (let n of tree.listNodes()) {
-        assert.ok(n.data.MAIN == null)
-      }
-    })
-  })
-
   describe('loadTreeFromData', () => {
     it('load test content', () => {
       for (let name of names) {
