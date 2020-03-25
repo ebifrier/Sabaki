@@ -348,7 +348,8 @@ class GameGraph extends Component {
             ? [72, 134, 213]
             : node.data.TE != null
             ? [89, 168, 15]
-            : commentProperties.some(x => node.data[x] != null)
+            : commentProperties.some(x => node.data[x] != null) ||
+              node.data.MAIN != null
             ? [255, 174, 61]
             : [238, 238, 238]
 
