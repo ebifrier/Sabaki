@@ -21,6 +21,7 @@ import sabaki from '../modules/sabaki.js'
 import * as gametree from '../modules/gametree.js'
 import * as gtplogger from '../modules/gtplogger.js'
 import * as helper from '../modules/helper.js'
+import * as aiwithgui from '../modules/aiwithgui'
 
 const setting = remote.require('./setting')
 const t = i18n.context('App')
@@ -56,6 +57,7 @@ class App extends Component {
 
     window.addEventListener('load', () => {
       sabaki.events.emit('ready')
+      aiwithgui.startRecordWatching()
     })
 
     ipcRenderer.on('load-file', (evt, ...args) => {
