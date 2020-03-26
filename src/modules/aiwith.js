@@ -44,6 +44,7 @@ export function loadTreeAppend(tree, mainTree) {
       draft.removeProperty(n.id, 'MAIN')
     }
 
+    draft.addToProperty(nextTreePosition, 'MAIN', true)
     while (nextTreePosition != null && mainTreeNode != null) {
       nextTreePosition = draft.appendNode(nextTreePosition, {
         ...mainTreeNode.data,

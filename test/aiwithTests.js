@@ -41,6 +41,7 @@ describe('aiwith', () => {
         let mains = []
         newTree.mutate(draft => {
           let nodeId = newTree.root.id
+          mains.push(nodeId)
           for (let mainNode of mainNodes.slice(1)) {
             nodeId = draft.appendNode(nodeId, mainNode.data)
             mains.push(nodeId)
