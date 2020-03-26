@@ -1,13 +1,10 @@
-import {remote} from 'electron'
 import fs from 'fs'
-import EventEmitter from 'events'
-import {basename, extname} from 'path'
 import {loggers} from 'winston'
 
 import * as aiwith from './aiwith'
-import sabaki from '../modules/sabaki.js'
+import sabaki from './sabaki.js'
 
-const setting = remote.require('./setting')
+//const setting = electron.remote.require('./setting')
 let lastLoadedData = null
 let recordWatching = false
 
