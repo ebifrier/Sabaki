@@ -4,7 +4,8 @@ const i18n = require('./i18n')
 const setting = require('./setting')
 const updater = require('./updater')
 
-let windows = []
+let mainWindow = null
+let designWindows = []
 let openfile = null
 
 function newWindow(path) {
@@ -26,7 +27,7 @@ function newWindow(path) {
     }
   })
 
-  windows.push(window)
+  mainWindow = window
   buildMenu()
 
   window.once('ready-to-show', () => {
@@ -48,6 +49,7 @@ function newWindow(path) {
 
   window.on('closed', () => {
     window = null
+    mainWindow = null
   })
 
   window.webContents.audioMuted = !setting.get('sound.enable')
@@ -61,6 +63,30 @@ function newWindow(path) {
   })
 
   window.loadURL(`file://${resolve(__dirname, '../index.html')}`)
+
+  newDesignWindow()
+  return window
+}
+
+function newDesignWindow() {
+  let window = new BrowserWindow({
+    parent: mainWindow,
+    width: 800,
+    height: 600,
+    frame: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  })
+  designWindows.push(window)
+
+  //ウィンドウを閉じるイベント処理
+  window.on('closed', () => {
+    designWindows = designWindows.filter(win => win != window)
+    window = null
+  })
+
+  window.loadURL(`file://${resolve(__dirname, '../design.html')}`)
 
   return window
 }
@@ -87,6 +113,7 @@ function buildMenu(props = {}) {
         item.click = () =>
           ({
             newWindow,
+            newDesignWindow,
             checkForUpdates: () => checkForUpdates({showFailDialogs: true})
           }[key]())
 
@@ -235,12 +262,12 @@ async function main() {
 
   newWindow(openfile)
 
-  if (setting.get('app.startup_check_updates')) {
+  /*if (setting.get('app.startup_check_updates')) {
     setTimeout(
       () => checkForUpdates(),
       setting.get('app.startup_check_updates_delay')
     )
-  }
+  }*/
 
   ipcMain.on('new-window', (evt, ...args) => newWindow(...args))
   ipcMain.on('build-menu', (evt, ...args) => buildMenu(...args))

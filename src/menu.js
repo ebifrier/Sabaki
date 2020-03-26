@@ -777,6 +777,23 @@ exports.get = function(props = {}) {
       ],
       role: 'window'
     },
+    ,
+    {
+      id: 'aiwith',
+      label: 'AI用メニュー',
+      submenu: [
+        {
+          label: i18n.t('menu.help', 'Check for &Updates'),
+          clickMain: 'checkForUpdates',
+          neverDisable: true
+        },
+        {type: 'separator'},
+        {
+          label: 'デザインを表示',
+          clickMain: 'newDesignWindow'
+        }
+      ]
+    },
     {
       id: 'help',
       label: i18n.t('menu.help', '&Help'),

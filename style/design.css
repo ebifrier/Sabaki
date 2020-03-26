@@ -1,0 +1,20 @@
+@import url('../node_modules/@sabaki/shudan/css/goban.css');
+
+html, body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.movable-area {
+  -webkit-app-region: drag;
+  display: block;
+  position: absolute;
+  height: auto;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: green;
+  margin: 16px;
+}
