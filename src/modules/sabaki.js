@@ -1,7 +1,7 @@
 import fs from 'fs'
 import EventEmitter from 'events'
 import {basename, extname} from 'path'
-import {remote} from 'electron'
+import {remote, ipcRenderer} from 'electron'
 import {h} from 'preact'
 import {v4 as uuid} from 'uuid'
 
@@ -107,7 +107,28 @@ class Sabaki extends EventEmitter {
       // Info Overlay
 
       infoOverlayText: '',
-      showInfoOverlay: false
+      showInfoOverlay: false,
+
+      // Design Window
+
+      design: {
+        leftIsWhite: false,
+        showGoban: true,
+        gobanLeft: 0,
+        gobanTop: 0,
+        gobanRight: 100,
+        gobanBottom: 50,
+        analysisType: 'winrate',
+        showAnalysis: true,
+        showScoreValue: true,
+        scoreBlackXY: [200, 200],
+        scoreWhiteXY: [400, 200],
+        scoreFontSize: 15,
+        backgroundImage: 'url(./img/ui/tatami.png)',
+        whiteBarImage: '',
+        blackCandidateImage: '',
+        whiteCandidateImage: ''
+      }
     }
 
     this.events = new EventEmitter()
@@ -137,6 +158,22 @@ class Sabaki extends EventEmitter {
     Object.assign(this.state, change)
 
     this.emit('change', {change, callback})
+
+    let {treePosition, gameIndex, gameTrees} = change
+    if (treePosition != null || gameIndex != null || gameTrees != null) {
+      let gameRoots =
+        gameTrees != null ? gameTrees.map(tree => tree.root) : null
+      ipcRenderer.send('state-change', {
+        change: {treePosition, gameIndex, gameRoots}
+      })
+    }
+
+    let {analysis, analysisTreePosition} = change
+    if (analysis != null && analysisTreePosition != null) {
+      ipcRenderer.send('state-change', {
+        change: {analysis, analysisTreePosition}
+      })
+    }
   }
 
   getInferredState(state) {

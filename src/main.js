@@ -272,6 +272,11 @@ async function main() {
   ipcMain.on('new-window', (evt, ...args) => newWindow(...args))
   ipcMain.on('build-menu', (evt, ...args) => buildMenu(...args))
   ipcMain.on('check-for-updates', (evt, ...args) => checkForUpdates(...args))
+  ipcMain.on('state-change', (evt, ...args) => {
+    for (let win of designWindows) {
+      win.webContents.send('state-change', ...args)
+    }
+  })
 }
 
 main()
