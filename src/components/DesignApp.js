@@ -10,6 +10,23 @@ const setting = remote.require('./setting')
 const CanvasWidth = 1920
 const CanvasHeight = 1080
 
+class Rectangle {
+  constructor(left = 0, top = 0, right = 0, bottom = 0) {
+    this.left = left
+    this.top = top
+    this.right = right
+    this.bottom = bottom
+  }
+
+  get width() {
+    return Math.abs(this.right - this.left)
+  }
+
+  get height() {
+    return Math.abs(this.bottom - this.top)
+  }
+}
+
 class DesignApp extends Component {
   constructor(props) {
     super(props)
@@ -24,8 +41,8 @@ class DesignApp extends Component {
     this.whiteBar = new Image()
     this.whiteBar.onload = async () => await this.onWhiteBarLoaded()
 
-    this.background.src = this.state.design.backgroundImage
-    this.whiteBar.src = this.state.design.whiteBarImage
+    this.background.src = this.state.design.backgroundPath
+    this.whiteBar.src = this.state.design.whiteBarPath
 
     ipcRenderer.on('state-change', async (evt, {change}) => {
       if (change != null && change.gameRoots != null) {
@@ -52,28 +69,36 @@ class DesignApp extends Component {
     this.forceUpdate()
   }
 
-  async getImagePixelRect(imagePath) {
-    let image = await Jimp.read(imagePath)
-    let bitmap = image.bitmap
-    let rect = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, 0, 0]
+  async getVisibleRect(imagePath) {
+    const MaxValue = Number.MAX_SAFE_INTEGER
 
-    image.scan(0, 0, bitmap.width, bitmap.height, (x, y, idx) => {
-      let alpha = this.bitmap.data[idx + 3]
+    try {
+      let image = await Jimp.read(imagePath)
+      let bitmap = image.bitmap
+      let rect = new Rectangle(MaxValue, MaxValue, 0, 0)
 
-      if (alpha > 0) {
-        rect[0] = Math.min(rect[0], x)
-        rect[1] = Math.min(rect[1], y)
-        rect[2] = Math.max(rect[2], x)
-        rect[3] = Math.max(rect[3], y)
-      }
-    })
+      image.scan(0, 0, bitmap.width, bitmap.height, (x, y, idx) => {
+        let alpha = bitmap.data[idx + 3]
 
-    return rect
+        if (alpha > 0) {
+          rect.left = Math.min(rect.left, x)
+          rect.top = Math.min(rect.top, y)
+          rect.right = Math.max(rect.right, x)
+          rect.bottom = Math.max(rect.bottom, y)
+        }
+      })
+
+      rect.left -= 4
+      rect.right += 4
+      return rect
+    } catch {
+      return null
+    }
   }
 
   async onWhiteBarLoaded() {
-    this.whiteBarRect = await this.getImagePixelRect(
-      this.state.design.whiteBarImage
+    this.whiteBarRect = await this.getVisibleRect(
+      this.state.design.whiteBarPath
     )
     this.forceUpdate()
   }
@@ -81,23 +106,89 @@ class DesignApp extends Component {
   // Render
 
   renderCanvas() {
+    let normalizeWinrate = value => {
+      value = Math.round(value)
+      return Math.max(1, Math.min(value, 99))
+    }
+
+    let renderScoreValue = winrate => {
+      let blackWinrate = normalizeWinrate(winrate)
+      let whiteWinrate = 100 - blackWinrate
+
+      ctx.font = `bold ${design.scoreValueFontSize}pt Arial`
+      ctx.fillStyle = 'white'
+      ctx.fillText(
+        blackWinrate.toString(),
+        design.scoreValueBlackX,
+        design.scoreValueBlackY
+      )
+
+      ctx.fillStyle = 'black'
+      ctx.fillText(
+        whiteWinrate.toString(),
+        design.scoreValueWhiteX,
+        design.scoreValueWhiteY
+      )
+    }
+
+    let calcWhiteBarRect = (whiteBarRect, winrate, blackIsLeft) => {
+      let value = blackIsLeft ? winrate : 100.0 - winrate
+      let offset = (whiteBarRect.width * value) / 100.0
+
+      return blackIsLeft
+        ? new Rectangle(
+            this.whiteBarRect.left + offset,
+            this.whiteBarRect.top,
+            this.whiteBarRect.right,
+            this.whiteBarRect.bottom
+          )
+        : new Rectangle(
+            this.whiteBarRect.left,
+            this.whiteBarRect.top,
+            this.whiteBarRect.left + offset,
+            this.whiteBarRect.bottom
+          )
+    }
+
     let ctx = this.canvas.getContext('2d')
-    let cw = CanvasWidth
-    let ch = CanvasHeight
-    let sw = this.background.naturalWidth
-    let sh = this.background.naturalHeight
+    let w = this.background.naturalWidth || CanvasWidth
+    let h = this.background.naturalHeight || CanvasHeight
+    let design = this.state.design
 
-    this.canvas.width = CanvasWidth
-    this.canvas.height = CanvasHeight
+    this.canvas.width = w
+    this.canvas.height = h
 
-    ctx.clearRect(0, 0, cw, ch)
-    ctx.drawImage(this.background, 0, 0, sw, sh, 0, 0, cw, ch)
-    ctx.drawImage(this.whiteBar, 0, 0, 400, sh, 0, 0, 400, ch)
+    let analysis = this.state.analysis || {}
+    let winrate = analysis.sign > 0 ? analysis.winrate : 100 - analysis.winrate
+    if (winrate == null || isNaN(winrate)) winrate = 50
+    winrate = normalizeWinrate(winrate)
 
-    ctx.fillStyle = 'red'
-    ctx.font = 'bold 40pt Arial'
-    ctx.fillText('55', 0, 100)
-    ctx.fillText('88', 200, 100)
+    ctx.clearRect(0, 0, w, h)
+    ctx.drawImage(this.background, 0, 0, w, h, 0, 0, w, h)
+
+    if (this.whiteBarRect != null) {
+      let rect = calcWhiteBarRect(
+        this.whiteBarRect,
+        winrate,
+        design.blackIsLeft
+      )
+
+      ctx.drawImage(
+        this.whiteBar,
+        rect.left,
+        rect.top,
+        rect.width,
+        rect.height,
+        rect.left,
+        rect.top,
+        rect.width,
+        rect.height
+      )
+    }
+
+    if (design.showScoreValue) {
+      renderScoreValue(winrate)
+    }
   }
 
   render(_, state) {

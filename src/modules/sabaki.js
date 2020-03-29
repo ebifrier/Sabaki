@@ -112,7 +112,7 @@ class Sabaki extends EventEmitter {
       // Design Window
 
       design: {
-        leftIsWhite: false,
+        blackIsLeft: true,
         showGoban: true,
         gobanLeft: 55,
         gobanTop: 18,
@@ -121,13 +121,15 @@ class Sabaki extends EventEmitter {
         analysisType: 'winrate',
         showAnalysis: true,
         showScoreValue: true,
-        scoreBlackXY: [200, 200],
-        scoreWhiteXY: [400, 200],
-        scoreFontSize: 15,
-        backgroundImage: './img/premium/background.png',
-        whiteBarImage: './img/premium/white_bar.png',
-        blackCandidateImage: '',
-        whiteCandidateImage: ''
+        scoreValueBlackX: 200,
+        scoreValueBlackY: 200,
+        scoreValueWhiteX: 400,
+        scoreValueWhiteY: 200,
+        scoreValueFontSize: 30,
+        backgroundPath: './img/premium/background.png',
+        whiteBarPath: './img/premium/white_bar.png',
+        blackCandidatePath: '',
+        whiteCandidatePath: ''
       }
     }
 
