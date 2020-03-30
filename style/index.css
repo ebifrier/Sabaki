@@ -1442,3 +1442,11 @@ header {
 .shudan-vertex .shudan-heat {
   transition: none;
 }
+
+.shudan-vertex div {
+  transform: scale(1, 0.935);
+}
+
+.shudan-goban {
+  transform: scale(1, 1.07);
+}

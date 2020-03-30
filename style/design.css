@@ -30,6 +30,7 @@ html, body {
 .design-main #goban {
   left: 0 !important;
   top: 0 !important;
+  transform-origin: top;
 }
 
 .design-main .movable-area {
