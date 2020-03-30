@@ -421,8 +421,26 @@ export default class Goban extends Component {
         winrate,
         scoreLead
       } of analysis.variations) {
-        let strength = Math.round((visits * winrate * 8) / maxVisitsWin) + 1
+        let getWinrateText = (winrate, simple = false) => {
+          return simple
+            ? Math.round(winrate).toString()
+            : i18n.formatNumber(winrate) +
+                (Math.floor(winrate) === winrate ? '%' : '')
+        }
 
+        let getScoreLeadText = scoreLead => {
+          return (scoreLead >= 0 ? '+' : '') + i18n.formatNumber(scoreLead)
+        }
+
+        let getVisitText = visits => {
+          return visits == null
+            ? '-'
+            : visits < 1000
+            ? i18n.formatNumber(visits)
+            : i18n.formatNumber(Math.round(visits / 100) / 10) + 'k'
+        }
+
+        let strength = Math.round((visits * winrate * 8) / maxVisitsWin) + 1
         winrate =
           strength <= 3 ? Math.floor(winrate) : Math.floor(winrate * 10) / 10
         scoreLead = scoreLead == null ? null : Math.round(scoreLead * 10) / 10
@@ -433,17 +451,11 @@ export default class Goban extends Component {
           text:
             visits < 10
               ? ''
-              : [
-                  analysisType === 'winrate'
-                    ? i18n.formatNumber(winrate) +
-                      (Math.floor(winrate) === winrate ? '%' : '')
-                    : analysisType === 'scoreLead' && scoreLead != null
-                    ? (scoreLead >= 0 ? '+' : '') + i18n.formatNumber(scoreLead)
-                    : '–',
-                  visits < 1000
-                    ? i18n.formatNumber(visits)
-                    : i18n.formatNumber(Math.round(visits / 100) / 10) + 'k'
-                ].join('\n')
+              : analysisType === 'winrate'
+              ? [getWinrateText(winrate), getVisitText(visits)].join('\n')
+              : analysisType === 'scoreLead'
+              ? [getScoreLeadText(scoreLead), getVisitText(visits)].join('\n')
+              : getWinrateText(winrate, true)
         }
       }
     }
