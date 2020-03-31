@@ -207,11 +207,15 @@ class DesignApp extends Component {
 
     return h(
       'main',
-      {class: 'design-main'},
+      {
+        class: 'design-main'
+      },
+
       h('canvas', {
         class: 'background',
         ref: el => (this.canvas = el)
       }),
+
       h(
         'div',
         {
@@ -223,6 +227,7 @@ class DesignApp extends Component {
             bottom: `${100 - design.gobanBottom}%`
           }
         },
+
         h(Goban, {
           gameTree,
           treePosition,
@@ -243,6 +248,7 @@ class DesignApp extends Component {
           transformation: state.boardTransformation
         })
       ),
+
       h('div', {
         class: 'movable-area'
       })
