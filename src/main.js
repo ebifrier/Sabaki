@@ -32,6 +32,7 @@ function newWindow(path) {
 
   window.once('ready-to-show', () => {
     window.show()
+    window.webContents.openDevTools()
   })
 
   if (setting.get('window.maximized') === true) {
@@ -74,13 +75,18 @@ function newDesignWindow() {
     width: 800,
     height: 600,
     frame: false,
+    show: false,
     webPreferences: {
       nodeIntegration: true
     }
   })
   designWindows.push(window)
 
-  //ウィンドウを閉じるイベント処理
+  window.once('ready-to-show', () => {
+    window.show()
+    window.webContents.openDevTools()
+  })
+
   window.on('closed', () => {
     designWindows = designWindows.filter(win => win != window)
     window = null
