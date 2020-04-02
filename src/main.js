@@ -65,7 +65,7 @@ function newWindow(path) {
 
   window.loadURL(`file://${resolve(__dirname, '../index.html')}`)
 
-  newDesignWindow()
+  //newDesignWindow()
   return window
 }
 
