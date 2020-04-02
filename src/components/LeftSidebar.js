@@ -4,6 +4,7 @@ import {h, Component} from 'preact'
 import SplitContainer from './helpers/SplitContainer.js'
 import GtpConsole from './sidebars/GtpConsole.js'
 import {EnginePeerList} from './sidebars/PeerList.js'
+import {DesignSetting} from './sidebars/DesignSetting.js'
 
 const setting = remote.require('./setting')
 const peerListMinHeight = setting.get('view.peerlist_minheight')
@@ -66,6 +67,7 @@ export default class LeftSidebar extends Component {
   shouldComponentUpdate(nextProps) {
     return (
       nextProps.showLeftSidebar != this.props.showLeftSidebar ||
+      nextProps.leftSidebarType != this.props.leftSidebarType ||
       nextProps.showLeftSidebar
     )
   }
@@ -78,6 +80,7 @@ export default class LeftSidebar extends Component {
       whiteEngineSyncerId,
       engineGameOngoing,
       showLeftSidebar,
+      leftSidebarType,
       consoleLog
     },
     {peerListHeight, selectedEngineSyncerId}
@@ -89,45 +92,47 @@ export default class LeftSidebar extends Component {
         id: 'leftsidebar'
       },
 
-      h(SplitContainer, {
-        vertical: true,
-        invert: true,
-        sideSize: peerListHeight,
+      leftSidebarType === 'engine'
+        ? h(SplitContainer, {
+            vertical: true,
+            invert: true,
+            sideSize: peerListHeight,
 
-        sideContent: h(EnginePeerList, {
-          attachedEngineSyncers,
-          analyzingEngineSyncerId,
-          blackEngineSyncerId,
-          whiteEngineSyncerId,
-          selectedEngineSyncerId,
-          engineGameOngoing,
+            sideContent: h(EnginePeerList, {
+              attachedEngineSyncers,
+              analyzingEngineSyncerId,
+              blackEngineSyncerId,
+              whiteEngineSyncerId,
+              selectedEngineSyncerId,
+              engineGameOngoing,
 
-          onEngineSelect: this.handleEngineSelect
-        }),
+              onEngineSelect: this.handleEngineSelect
+            }),
 
-        mainContent: h(GtpConsole, {
-          show: showLeftSidebar,
-          consoleLog,
-          attachedEngine: attachedEngineSyncers
-            .map(syncer =>
-              syncer.id !== selectedEngineSyncerId
-                ? null
-                : {
-                    name: syncer.engine.name,
-                    get commands() {
-                      return syncer.commands
-                    }
-                  }
-            )
-            .find(x => x != null),
+            mainContent: h(GtpConsole, {
+              show: showLeftSidebar,
+              consoleLog,
+              attachedEngine: attachedEngineSyncers
+                .map(syncer =>
+                  syncer.id !== selectedEngineSyncerId
+                    ? null
+                    : {
+                        name: syncer.engine.name,
+                        get commands() {
+                          return syncer.commands
+                        }
+                      }
+                )
+                .find(x => x != null),
 
-          onSubmit: this.handleCommandSubmit,
-          onControlStep: this.handleCommandControlStep
-        }),
+              onSubmit: this.handleCommandSubmit,
+              onControlStep: this.handleCommandControlStep
+            }),
 
-        onChange: this.handlePeerListHeightChange,
-        onFinish: this.handlePeerListHeightFinish
-      })
+            onChange: this.handlePeerListHeightChange,
+            onFinish: this.handlePeerListHeightFinish
+          })
+        : h(DesignSetting, {})
     )
   }
 }

@@ -73,7 +73,8 @@ class Sabaki extends EventEmitter {
       // Sidebar
 
       consoleLog: [],
-      showLeftSidebar: setting.get('view.show_leftsidebar'),
+      showLeftSidebar: null,
+      leftSidebarType: null,
       leftSidebarWidth: setting.get('view.leftsidebar_width'),
       showWinrateGraph: setting.get('view.show_winrategraph'),
       showGameGraph: setting.get('view.show_graph'),
@@ -255,6 +256,8 @@ class Sabaki extends EventEmitter {
       'view.show_move_numbers': 'showMoveNumbers',
       'view.show_next_moves': 'showNextMoves',
       'view.show_siblings': 'showSiblings',
+      'view.show_leftsidebar': 'showLeftSidebar',
+      'view.leftsidebar_type': 'leftSidebarType',
       'view.coordinates_type': 'coordinatesType',
       'view.fuzzy_stone_placement': 'fuzzyStonePlacement',
       'view.animated_stone_placement': 'animateStonePlacement',

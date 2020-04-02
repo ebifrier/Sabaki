@@ -186,6 +186,7 @@ let defaults = {
   'view.animated_stone_placement': true,
   'view.coordinates_type': 'A1',
   'view.fuzzy_stone_placement': true,
+  'view.leftsidebar_type': 'engine',
   'view.leftsidebar_width': 250,
   'view.leftsidebar_minwidth': 100,
   'view.peerlist_height': 130,

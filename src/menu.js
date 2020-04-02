@@ -32,6 +32,7 @@ exports.get = function(props = {}) {
     showGameGraph,
     showCommentBox,
     showLeftSidebar,
+    leftSidebarType,
     engineGameOngoing
   } = props
 
@@ -434,12 +435,14 @@ exports.get = function(props = {}) {
         {
           label: i18n.t('menu.engines', 'Show &Engines Sidebar'),
           type: 'checkbox',
-          checked: !!showLeftSidebar,
+          checked: !!showLeftSidebar && leftSidebarType === 'engine',
           click: () => {
-            toggleSetting('view.show_leftsidebar')
-            sabaki.setState(({showLeftSidebar}) => ({
-              showLeftSidebar: !showLeftSidebar
-            }))
+            if (setting.get('view.leftsidebar_type') === 'engine') {
+              toggleSetting('view.show_leftsidebar')
+            } else {
+              setting.set('view.show_leftsidebar', true)
+              setting.set('view.leftsidebar_type', 'engine')
+            }
           }
         },
         {type: 'separator'},
@@ -783,14 +786,22 @@ exports.get = function(props = {}) {
       label: 'AI用メニュー',
       submenu: [
         {
-          label: i18n.t('menu.help', 'Check for &Updates'),
-          clickMain: 'checkForUpdates',
-          neverDisable: true
+          label: 'デザイン設定を表示',
+          checked: !!showLeftSidebar && leftSidebarType === 'design',
+          click: () => {
+            if (setting.get('view.leftsidebar_type') === 'design') {
+              toggleSetting('view.show_leftsidebar')
+            } else {
+              setting.set('view.show_leftsidebar', true)
+              setting.set('view.leftsidebar_type', 'design')
+            }
+          }
         },
         {type: 'separator'},
         {
           label: 'デザインを表示',
-          clickMain: 'newDesignWindow'
+          clickMain: 'newDesignWindow',
+          neverDisable: true
         }
       ]
     },

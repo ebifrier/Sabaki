@@ -350,6 +350,7 @@ class App extends Component {
         showGameGraph: state.showGameGraph,
         showCommentBox: state.showCommentBox,
         showLeftSidebar: state.showLeftSidebar,
+        leftSidebarType: state.leftSidebarType,
         engineGameOngoing: state.engineGameOngoing
       }),
 
