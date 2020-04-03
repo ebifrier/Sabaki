@@ -1257,6 +1257,84 @@ header {
     background: none;
 }
 
+.settings-list {
+    height: initial;
+    color: #eee;
+    overflow-y: hidden;
+  }
+  .settings-list .settings-header {
+    background-color: #1e1e1e;
+    padding: 0.3em 0.1em 0.1em 0.1em;
+    margin-top: 0.2em;
+  }
+  .settings-list .settings-header input[type="checkbox"] {
+    display: none;
+  }
+  .settings-list .settings-header label {
+    position: relative;
+    display: block;
+    cursor: pointer;
+  }
+  .settings-list .settings-header label:after {
+    content: url(../node_modules/@primer/octicons/build/svg/triangle-right.svg);
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    filter: invert(100%);
+    right: 0.7em;
+    top: 0.2em;
+  }
+  .settings-list .settings-header input[type="checkbox"]:checked + label:after {
+    content: url(../node_modules/@primer/octicons/build/svg/triangle-down.svg);
+    right: 0.55em;
+    top: 0.1em;
+  }
+  .settings-list ul {
+    background-color: rgba(38, 41, 44, .97);
+    padding: 0.1em 0.3em;
+    transition: .5s;
+
+    height: 0;
+    opacity: 0;
+    display: none;
+  }
+  .settings-list ul.expanded {
+    height: initial;
+    opacity: 1;
+    display: block;
+  }
+  .settings-list li, .settings-list li:nth-child(2n),
+  .settings-list li input {
+    padding: 0.1em;
+  }
+  .settings-list li, .settings-list li:nth-child(2n) {
+    background-color: rgba(38, 41, 44, .97);
+  }
+  .settings-list li input {
+    color: #eee;
+  }
+  .settings-list li input[type="text"] {
+    padding: 0.1em;
+    width: calc(100% - 24px); /* for icon */
+  }
+  .settings-list li input[type="number"] {
+    padding: 0.1em;
+    width: 5em;
+    text-align: right;
+  }
+  .settings-list li label.mr {
+    margin-right: 0.5em;
+  }
+  .settings-list li label.for-checkbox {
+    display: block;
+  }
+  .settings-list li a.browse {
+    padding-top: 0.3em;
+    margin-right: 6px;
+    margin-left: 0;
+    cursor: pointer;
+  }
+
 .properties-list table {
     border-collapse: collapse;
     width: 100%;

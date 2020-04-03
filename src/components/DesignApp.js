@@ -6,7 +6,7 @@ import Goban from './Goban.js'
 import sabaki from '../modules/sabaki.js'
 import * as gametree from '../modules/gametree.js'
 
-const setting = remote.require('./setting')
+const dsetting = remote.require('./designsetting')
 const CanvasWidth = 1920
 const CanvasHeight = 1080
 
@@ -37,12 +37,16 @@ class DesignApp extends Component {
 
     this.background = new Image()
     this.background.onload = () => this.onBackgroundLoaded()
+    this.background.onerror = () => this.background.setAttribute('src', '')
+    this.background.src = dsetting.get('design.background_path')
 
     this.whiteBar = new Image()
     this.whiteBar.onload = async () => await this.onWhiteBarLoaded()
+    this.whiteBar.onerror = () => this.whiteBar.setAttribute('src', '')
+    this.whiteBar.src = dsetting.get('design.whitebar_path')
 
-    this.background.src = this.state.design.backgroundPath
-    this.whiteBar.src = this.state.design.whiteBarPath
+    let window = remote.getCurrentWindow()
+    dsetting.events.on(window.id, 'change', this.onChangeSetting.bind(this))
 
     ipcRenderer.on('state-change', async (evt, {change}) => {
       if (change != null && change.gameRoots != null) {
@@ -63,6 +67,16 @@ class DesignApp extends Component {
       draft._heightCache = null
       draft._structureHashCache = null
     })
+  }
+
+  onChangeSetting({key}) {
+    if (key === 'design.background_path') {
+      this.background.src = dsetting.get('design.background_path')
+    } else if (key === 'design.whitebar_path') {
+      this.whiteBar.src = dsetting.get('design.whitebar_path')
+    }
+
+    this.forceUpdate()
   }
 
   onBackgroundLoaded() {
@@ -98,7 +112,7 @@ class DesignApp extends Component {
 
   async onWhiteBarLoaded() {
     this.whiteBarRect = await this.getVisibleRect(
-      this.state.design.whiteBarPath
+      dsetting.get('design.whitebar_path')
     )
     this.forceUpdate()
   }
@@ -115,19 +129,19 @@ class DesignApp extends Component {
       let blackWinrate = normalizeWinrate(winrate)
       let whiteWinrate = 100 - blackWinrate
 
-      ctx.font = `bold ${design.scoreValueFontSize}pt Arial`
+      ctx.font = `bold ${dsetting.get('design.score_fontsize')}pt Arial`
       ctx.fillStyle = 'white'
       ctx.fillText(
-        blackWinrate.toString(),
-        design.scoreValueBlackX,
-        design.scoreValueBlackY
+        ('00' + blackWinrate).slice(-2),
+        dsetting.get('design.score_blackx'),
+        dsetting.get('design.score_blacky')
       )
 
       ctx.fillStyle = 'black'
       ctx.fillText(
-        whiteWinrate.toString(),
-        design.scoreValueWhiteX,
-        design.scoreValueWhiteY
+        ('00' + whiteWinrate).slice(-2),
+        dsetting.get('design.score_whitex'),
+        dsetting.get('design.score_whitey')
       )
     }
 
@@ -153,15 +167,14 @@ class DesignApp extends Component {
     let ctx = this.canvas.getContext('2d')
     let w = this.background.naturalWidth || CanvasWidth
     let h = this.background.naturalHeight || CanvasHeight
-    let design = this.state.design
-
-    this.canvas.width = w
-    this.canvas.height = h
 
     let analysis = this.state.analysis || {}
     let winrate = analysis.sign > 0 ? analysis.winrate : 100 - analysis.winrate
     if (winrate == null || isNaN(winrate)) winrate = 50
     winrate = normalizeWinrate(winrate)
+
+    this.canvas.width = w
+    this.canvas.height = h
 
     ctx.clearRect(0, 0, w, h)
     ctx.drawImage(this.background, 0, 0, w, h, 0, 0, w, h)
@@ -170,7 +183,7 @@ class DesignApp extends Component {
       let rect = calcWhiteBarRect(
         this.whiteBarRect,
         winrate,
-        design.blackIsLeft
+        dsetting.get('design.black_left')
       )
 
       ctx.drawImage(
@@ -186,7 +199,7 @@ class DesignApp extends Component {
       )
     }
 
-    if (design.showScoreValue) {
+    if (dsetting.get('design.show_score')) {
       renderScoreValue(winrate)
     }
   }
@@ -194,7 +207,6 @@ class DesignApp extends Component {
   render(_, state) {
     let gameTree = state.gameTrees[state.gameIndex]
     let treePosition = state.treePosition
-    let design = state.design
 
     let board =
       gameTree.get(treePosition) != null
@@ -221,32 +233,34 @@ class DesignApp extends Component {
         {
           class: 'goban-wrap',
           style: {
-            left: `${design.gobanLeft}%`,
-            top: `${design.gobanTop}%`,
-            right: `${100 - design.gobanRight}%`,
-            bottom: `${100 - design.gobanBottom}%`
+            left: `${dsetting.get('design.goban_left')}%`,
+            top: `${dsetting.get('design.goban_top')}%`,
+            right: `${100 - dsetting.get('design.goban_right')}%`,
+            bottom: `${100 - dsetting.get('design.goban_bottom')}%`
           }
         },
 
-        h(Goban, {
-          gameTree,
-          treePosition,
-          board,
-          analysisType: design.analysisType,
-          analysis:
-            design.showAnalysis &&
-            state.analysisTreePosition != null &&
-            state.analysisTreePosition === treePosition
-              ? state.analysis
-              : null,
+        dsetting.get('design.show_goban')
+          ? h(Goban, {
+              gameTree,
+              treePosition,
+              board,
+              analysisType: 'simple',
+              analysis:
+                dsetting.get('design.show_heatmap') &&
+                state.analysisTreePosition != null &&
+                state.analysisTreePosition === treePosition
+                  ? state.analysis
+                  : null,
 
-          showCoordinates: false,
-          showNextMoves: false,
-          showSiblings: false,
-          fuzzyStonePlacement: false,
-          animateStonePlacement: true,
-          transformation: state.boardTransformation
-        })
+              showCoordinates: false,
+              showNextMoves: false,
+              showSiblings: false,
+              fuzzyStonePlacement: false,
+              animateStonePlacement: true,
+              transformation: state.boardTransformation
+            })
+          : null
       ),
 
       h('div', {

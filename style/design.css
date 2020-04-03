@@ -33,7 +33,6 @@ html, body {
   -webkit-app-region: drag;
   display: block;
   position: absolute;
-  height: auto;
   bottom: 0;
   top: 0;
   left: 0;
