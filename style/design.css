@@ -41,3 +41,7 @@ html, body {
   opacity: 0;
   margin: 16px;
 }
+
+.design-main .shudan-goban .shudan-heatlabel {
+  font-size: 0.66em;
+}

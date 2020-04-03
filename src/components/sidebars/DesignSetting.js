@@ -202,14 +202,16 @@ export class DesignSetting extends Component {
           h(
             'li',
             {},
-            h(
-              'label',
-              {class: 'for-checkbox'},
-              h('input', {
-                type: 'checkbox'
-              }),
-              '勝率'
-            )
+            h('label', {}, 'テストで表示する勝率:'),
+            h('input', {
+              type: 'range',
+              min: 0,
+              max: 100,
+              step: 1,
+              value: dsetting.get('design.test_winrate'),
+              onChange: evt =>
+                dsetting.set('design.test_winrate', evt.target.value)
+            })
           )
         )
       ),

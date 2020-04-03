@@ -9,8 +9,9 @@ let settings = {}
 
 let defaults = {
   'design.show_heatmap': true,
-  'design.test_mode': false,
   'design.black_left': true,
+  'design.test_mode': false,
+  'design.test_winrate': 50,
   'design.show_goban': true,
   'design.goban_left': 55,
   'design.goban_top': 18,

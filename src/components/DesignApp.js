@@ -120,28 +120,51 @@ class DesignApp extends Component {
   // Render
 
   renderCanvas() {
-    let normalizeWinrate = value => {
-      value = Math.round(value)
-      return Math.max(1, Math.min(value, 99))
+    let normalizeWinrate = (winrate, round = false) => {
+      if (winrate == null || isNaN(winrate)) winrate = 50
+      if (round) winrate = Math.round(winrate)
+      return Math.max(1, Math.min(winrate, 99))
+    }
+
+    let getWinrate = (analysis = {}) => {
+      let winrate = dsetting.get('design.test_mode')
+        ? dsetting.get('design.test_winrate')
+        : analysis == null
+        ? 50
+        : analysis.sign > 0
+        ? analysis.winrate
+        : 100 - analysis.winrate
+      return normalizeWinrate(winrate)
     }
 
     let renderScoreValue = winrate => {
-      let blackWinrate = normalizeWinrate(winrate)
+      let blackWinrate = normalizeWinrate(winrate, true)
       let whiteWinrate = 100 - blackWinrate
+      let winratePosList = [
+        [
+          dsetting.get('design.score_blackx'),
+          dsetting.get('design.score_blacky')
+        ],
+        [
+          dsetting.get('design.score_whitex'),
+          dsetting.get('design.score_whitey')
+        ]
+      ]
+      let blackIndex = dsetting.get('design.black_left') ? 0 : 1
 
       ctx.font = `bold ${dsetting.get('design.score_fontsize')}pt Arial`
       ctx.fillStyle = 'white'
       ctx.fillText(
         ('00' + blackWinrate).slice(-2),
-        dsetting.get('design.score_blackx'),
-        dsetting.get('design.score_blacky')
+        winratePosList[blackIndex][0],
+        winratePosList[blackIndex][1]
       )
 
       ctx.fillStyle = 'black'
       ctx.fillText(
         ('00' + whiteWinrate).slice(-2),
-        dsetting.get('design.score_whitex'),
-        dsetting.get('design.score_whitey')
+        winratePosList[1 - blackIndex][0],
+        winratePosList[1 - blackIndex][1]
       )
     }
 
@@ -167,11 +190,7 @@ class DesignApp extends Component {
     let ctx = this.canvas.getContext('2d')
     let w = this.background.naturalWidth || CanvasWidth
     let h = this.background.naturalHeight || CanvasHeight
-
-    let analysis = this.state.analysis || {}
-    let winrate = analysis.sign > 0 ? analysis.winrate : 100 - analysis.winrate
-    if (winrate == null || isNaN(winrate)) winrate = 50
-    winrate = normalizeWinrate(winrate)
+    let winrate = getWinrate(this.state.analysis)
 
     this.canvas.width = w
     this.canvas.height = h
