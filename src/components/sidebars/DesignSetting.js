@@ -30,6 +30,7 @@ export class DesignSetting extends Component {
     super(props)
 
     this.state = {
+      testMode: dsetting.get('design.test_mode'),
       isOpenBackground: true,
       isOpenOtherImage: false,
       isOpenBasic: false,
@@ -193,8 +194,10 @@ export class DesignSetting extends Component {
               h('input', {
                 type: 'checkbox',
                 checked: dsetting.get('design.test_mode'),
-                onChange: evt =>
+                onChange: evt => {
                   dsetting.set('design.test_mode', evt.target.checked)
+                  this.setState({testMode: evt.target.checked})
+                }
               }),
               '石や候補手の表示テストを行う'
             )
@@ -208,6 +211,7 @@ export class DesignSetting extends Component {
               min: 0,
               max: 100,
               step: 1,
+              disabled: !this.state.testMode,
               value: dsetting.get('design.test_winrate'),
               onChange: evt =>
                 dsetting.set('design.test_winrate', evt.target.value)
