@@ -90,6 +90,7 @@
     "@sabaki/sgf": "^3.4.7",
     "@sabaki/shudan": "^1.5.4",
     "argv-split": "^2.0.1",
+    "aws-sdk": "^2.653.0",
     "classnames": "^2.2.6",
     "dolm": "^0.7.3-beta",
     "fix-path": "^3.0.0",
