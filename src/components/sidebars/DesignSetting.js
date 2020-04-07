@@ -1,7 +1,7 @@
 import {h, Component} from 'preact'
 import {remote} from 'electron'
 
-import {showOpenDialog, showMessageBox} from '../../modules/dialog.js'
+import {showOpenDialog} from '../../modules/dialog.js'
 import i18n from '../../i18n.js'
 
 const dsetting = remote.require('./designsetting')
@@ -31,6 +31,7 @@ export class DesignSetting extends Component {
 
     this.state = {
       testMode: dsetting.get('design.test_mode'),
+      isOpenAWS: true,
       isOpenBackground: true,
       isOpenOtherImage: false,
       isOpenBasic: false,
@@ -50,12 +51,40 @@ export class DesignSetting extends Component {
     return !result || result.length === 0 ? null : result[0]
   }
 
-  render(_, state) {
+  render() {
     return h(
       'div',
       {
         class: 'design-setting'
       },
+
+      h(
+        'div',
+        {class: 'engines-list settings-list'},
+        h(SettingsHeader, {
+          title: 'AWS操作',
+          id: 'aws-operation',
+          isOpen: this.state.isOpenAWS,
+          setValue: v => this.setState({isOpenAWS: v})
+        }),
+        h(
+          'ul',
+          {class: this.state.isOpenAWS ? 'expanded' : ''},
+          h(
+            'li',
+            {},
+            h('button', {class: 'aws-start'}, 'AWSを起動'),
+            h(
+              'button',
+              {
+                class: 'aws-start',
+                disabled: 'disabled'
+              },
+              'AWSを停止'
+            )
+          )
+        )
+      ),
 
       h(
         'div',
