@@ -199,18 +199,7 @@ export default class PlayBar extends Component {
         )
       ),
 
-      h(
-        'a',
-        {
-          ref: el => (this.menuButtonElement = el),
-          class: 'menu',
-          onClick: this.handleMenuClick
-        },
-        h('img', {
-          src: './node_modules/@primer/octicons/build/svg/three-bars.svg',
-          height: 22
-        })
-      )
+      h('span', {style: {marginRight: '0.5em'}}, 'AWS起動準備中')
     )
   }
 }
