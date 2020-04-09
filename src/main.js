@@ -3,6 +3,7 @@ const {resolve} = require('path')
 const i18n = require('./i18n')
 const setting = require('./setting')
 const updater = require('./updater')
+const aws = require('./aws')
 
 let mainWindow = null
 let designWindows = []
@@ -33,6 +34,7 @@ function newWindow(path) {
   window.once('ready-to-show', () => {
     window.show()
     window.webContents.openDevTools()
+    aws.updateState()
   })
 
   if (setting.get('window.maximized') === true) {

@@ -1,35 +1,33 @@
 import assert from 'assert'
 import {v4 as uuid} from 'uuid'
-import * as aws from '../src/modules/aws.js'
+import * as aws from '../src/aws.js'
 
 describe('aws', () => {
-  let instanceName = null
-  let instance = null
+  let awsInstanceName = null
+  let awsInstance = null
 
   before(done => {
-    aws.initialize()
-
-    instanceName = uuid()
+    awsInstanceName = uuid()
     aws
-      .launchInstance(instanceName, 't2.micro')
-      .then(inst => {
-        assert.ok(inst != null)
-        instance = inst
+      .launch(awsInstanceName, 't2.micro')
+      .then(instance => {
+        assert.ok(instance != null)
+        awsInstance = instance
         done()
       })
-      .catch(done)
+      .catch(err => assert.fail(err))
   })
 
   after(done => {
-    if (instance == null) {
+    if (awsInstance == null) {
       done()
       return
     }
 
-    instance
+    awsInstance
       .terminate()
       .then(done)
-      .catch(done)
+      .catch(err => assert.fail(err))
   })
 
   describe('fetchInstances', () => {
@@ -40,22 +38,24 @@ describe('aws', () => {
 
     it('filter by name', () =>
       aws.fetchInstances().then(instances => {
-        instances = instances.filter(inst => inst.Name === instance.Name)
+        instances = instances.filter(
+          instance => instance.Name === awsInstance.Name
+        )
         assert.equal(instances.length, 1)
-        assert.equal(instances[0].InstanceId, instance.InstanceId)
+        assert.equal(instances[0].InstanceId, awsInstance.InstanceId)
       }))
   })
 
   describe('fetchInstanceByName', () => {
     it('correct name', () =>
-      aws.fetchInstanceByName(instanceName).then(inst => {
-        assert.equal(inst.Name, instance.Name)
-        assert.equal(inst.InstanceId, instance.InstanceId)
+      aws.fetchInstanceByName(awsInstanceName).then(instance => {
+        assert.equal(instance.Name, awsInstance.Name)
+        assert.equal(instance.InstanceId, awsInstance.InstanceId)
       }))
 
     it('invalid name', async () =>
-      aws.fetchInstanceByName('DLKSJDOFI').then(inst => {
-        assert.equal(inst, null)
+      aws.fetchInstanceByName('DLKSJDOFI').then(instance => {
+        assert.equal(instance, null)
       }))
   })
 
@@ -66,7 +66,7 @@ describe('aws', () => {
           assert.fail('timeout')
         }
 
-        instance
+        awsInstance
           .fetchStatus()
           .then(status => {
             if (status != null) {
