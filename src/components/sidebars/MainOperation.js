@@ -5,6 +5,7 @@ import {showOpenDialog} from '../../modules/dialog.js'
 import i18n from '../../i18n.js'
 
 const dsetting = remote.require('./designsetting')
+const aws = remote.require('./aws')
 const t = i18n.context('PreferencesDrawer')
 
 let SettingsHeader = ({title, id = null, isOpen = null, setValue = null}) => {
@@ -25,7 +26,7 @@ let SettingsHeader = ({title, id = null, isOpen = null, setValue = null}) => {
   }
 }
 
-export class DesignSetting extends Component {
+export class MainOperation extends Component {
   constructor(props) {
     super(props)
 
@@ -60,7 +61,7 @@ export class DesignSetting extends Component {
 
       h(
         'div',
-        {class: 'engines-list settings-list'},
+        {class: 'engines-list settings-list', style: {marginBottom: '16px'}},
         h(SettingsHeader, {
           title: 'AWS操作',
           id: 'aws-operation',
@@ -73,12 +74,21 @@ export class DesignSetting extends Component {
           h(
             'li',
             {},
-            h('button', {class: 'aws-start'}, 'AWSを起動'),
             h(
               'button',
               {
-                class: 'aws-start',
-                disabled: 'disabled'
+                class: 'aws-launch',
+                disabled: awsState !== 'terminated',
+                onClick: evt => aws.launchInstance()
+              },
+              'AWSを起動'
+            ),
+            h(
+              'button',
+              {
+                class: 'aws-terminate',
+                disabled: awsState === 'terminated',
+                onClick: evt => aws.terminateInstance()
               },
               'AWSを停止'
             )

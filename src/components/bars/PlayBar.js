@@ -211,7 +211,11 @@ export default class PlayBar extends Component {
         )
       ),
 
-      h('span', {style: {marginRight: '0.5em'}}, 'AWS起動準備中')
+      h(
+        'span',
+        {style: {color: awsStateInfo.color, marginRight: '8px'}},
+        awsStateInfo.label
+      )
     )
   }
 }

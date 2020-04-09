@@ -24,6 +24,7 @@ deadstones.useFetch('./node_modules/@sabaki/deadstones/wasm/deadstones_bg.wasm')
 
 const {app} = remote
 const setting = remote.require('./setting')
+const aws = remote.require('./aws')
 
 class Sabaki extends EventEmitter {
   constructor() {
@@ -120,6 +121,26 @@ class Sabaki extends EventEmitter {
     this.historyPointer = 0
     this.history = []
     this.recordHistory()
+
+    // Emit state changes to the renderer process
+
+    this.on('change', ({change}) => {
+      this.emitStateChangeToRendererProcess(change)
+    })
+
+    // Bind state of aws to this.
+
+    aws.events.on('change', ({key, value}) => {
+      let change = {}
+      change[key] = value
+      this.setState(change)
+    })
+
+    aws.events.on('startAnalysis', ({instance}) => {
+      if (sabaki.state.analyzingEngineSyncerId == null) return
+    })
+
+    aws.events.on('stopAnalysis', ({instance}) => {})
 
     // Bind state to settings
 

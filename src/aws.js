@@ -155,13 +155,9 @@ exports.launch = async (name = null, instanceType = 'p2.xlarge') => {
   return result.Instances.map(instance => initInstance(instance))[0]
 }
 
-let operateAWS = async ({
-  updateStateOnly = false,
-  name = null,
-  instanceType = null
-} = {}) => {
+let operateAWS = async (updateStateOnly = false) => {
   try {
-    let instance = await exports.fetchInstanceByName(name)
+    let instance = await exports.fetchInstanceByName()
     let state = instance != null ? instance.State.Name : ''
     let status = instance != null ? await instance.fetchStatus() : null
 
@@ -169,10 +165,8 @@ let operateAWS = async ({
       exports.set('awsState', 'pending')
     } else if (state === 'running' && status === 'ok') {
       exports.set('awsState', 'running')
-      if (!updateStateOnly) {
-        // start analysis
-        exports.events.emit('startAnalysis', {})
-      }
+      // start analysis
+      exports.events.emit('startAnalysis', {instance})
     } else if (state === 'stopping' || state === 'shutting-down') {
       exports.set('awsState', 'shutting-down')
       if (!updateStateOnly) {
@@ -181,7 +175,7 @@ let operateAWS = async ({
     } else if (state === 'stopped' || state === 'terminated' || state === '') {
       exports.set('awsState', 'terminated')
       if (!updateStateOnly) {
-        await exports.launch(name, instanceType)
+        await exports.launch()
       }
     } else {
       exports.set('awsState', 'error')
@@ -192,22 +186,22 @@ let operateAWS = async ({
 }
 
 exports.updateState = async (repeat = true) => {
-  await operateAWS({updateStateOnly: true})
+  await operateAWS(true)
 
   if (repeat) {
     setTimeout(() => exports.updateState(repeat), 3000)
   }
 }
 
-exports.launchInstance = async (name = null, instanceType = null) => {
-  await operateAWS({updateStateOnly: false, name, instanceType})
+exports.launchInstance = async () => {
+  await operateAWS(false)
 }
 
 exports.terminateInstance = async () => {
   let instance = await exports.fetchInstanceByName()
   if (instance == null) return
 
-  exports.events.emit('stopAnalysis', {})
+  exports.events.emit('stopAnalysis', {instance})
 
   return new Promise((resolve, reject) => {
     setTimeout(async () => {

@@ -1352,12 +1352,19 @@ header {
   .settings-list li button + button {
     margin-left: 4px;
   }
-  .settings-list li button.aws-start {
+  .settings-list li button.aws-launch {
     background: #325d9e !important; /* #28921b */
     border: none; /* 1px #207515; /* 線色 */
   } 
-  .settings-list li button.aws-start:hover:not(:disabled) {
+  .settings-list li button.aws-launch:hover:not(:disabled) {
     background: #28518e !important;
+  }
+  .settings-list li button.aws-terminate {
+    background: #962929 !important;
+    border: none; 
+  } 
+  .settings-list li button.aws-terminate:hover:not(:disabled) {
+    background: #8e1717 !important;
   }
 
 .properties-list table {
