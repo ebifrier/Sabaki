@@ -108,30 +108,7 @@ class Sabaki extends EventEmitter {
       // Info Overlay
 
       infoOverlayText: '',
-      showInfoOverlay: false,
-
-      // Design Window
-
-      design: {
-        blackIsLeft: true,
-        showGoban: true,
-        gobanLeft: 55,
-        gobanTop: 18,
-        gobanRight: 94,
-        gobanBottom: 90,
-        analysisType: 'winrate',
-        showAnalysis: true,
-        showScoreValue: true,
-        scoreValueBlackX: 200,
-        scoreValueBlackY: 200,
-        scoreValueWhiteX: 400,
-        scoreValueWhiteY: 200,
-        scoreValueFontSize: 30,
-        backgroundPath: './img/premium/background.png',
-        whiteBarPath: './img/premium/white_bar.png',
-        blackCandidatePath: '',
-        whiteCandidatePath: ''
-      }
+      showInfoOverlay: false
     }
 
     this.events = new EventEmitter()
@@ -153,16 +130,13 @@ class Sabaki extends EventEmitter {
     this.updateSettingState()
   }
 
-  setState(change, callback = null) {
-    if (typeof change === 'function') {
-      change = change(this.state)
-    }
-
-    Object.assign(this.state, change)
-
-    this.emit('change', {change, callback})
-
-    let {treePosition, gameIndex, gameTrees} = change
+  emitStateChangeToRendererProcess({
+    treePosition,
+    gameIndex,
+    gameTrees,
+    analysis,
+    analysisTreePosition
+  }) {
     if (treePosition != null || gameIndex != null || gameTrees != null) {
       let gameRoots =
         gameTrees != null ? gameTrees.map(tree => tree.root) : null
@@ -171,12 +145,21 @@ class Sabaki extends EventEmitter {
       })
     }
 
-    let {analysis, analysisTreePosition} = change
     if (analysis != null && analysisTreePosition != null) {
       ipcRenderer.send('state-change', {
         change: {analysis, analysisTreePosition}
       })
     }
+  }
+
+  setState(change, callback = null) {
+    if (typeof change === 'function') {
+      change = change(this.state)
+    }
+
+    Object.assign(this.state, change)
+
+    this.emit('change', {change, callback})
   }
 
   getInferredState(state) {
