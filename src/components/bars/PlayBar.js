@@ -104,6 +104,7 @@ export default class PlayBar extends Component {
       playerCaptures,
       currentPlayer,
       showHotspot,
+      awsState,
 
       onCurrentPlayerClick = helper.noop
     },
@@ -112,6 +113,17 @@ export default class PlayBar extends Component {
     let captureStyle = index => ({
       opacity: playerCaptures[index] === 0 ? 0 : 0.7
     })
+
+    let awsStateInfo =
+      awsState === 'pending'
+        ? {label: 'AWS起動準備中', color: '#51d0f7'}
+        : awsState === 'running'
+        ? {label: 'AWS起動中', color: '#5fd65f'}
+        : awsState === 'shutting-down'
+        ? {label: 'AWS削除中', color: '#d3d657'}
+        : awsState === 'terminated'
+        ? {label: 'AWS未起動', color: 'lightgray'}
+        : {label: 'AWSでエラー発生', color: 'orangered'}
 
     return h(
       'header',

@@ -79,6 +79,7 @@ export default class MainView extends Component {
       treePosition,
       currentPlayer,
       gameInfo,
+      awsState,
 
       deadStones,
       scoringMethod,
@@ -186,6 +187,7 @@ export default class MainView extends Component {
           playerCaptures: [1, -1].map(sign => board.getCaptures(sign)),
           currentPlayer,
           showHotspot: node.data.HO != null,
+          awsState,
           onCurrentPlayerClick: this.handleTogglePlayer
         }),
 

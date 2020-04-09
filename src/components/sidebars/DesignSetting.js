@@ -51,7 +51,7 @@ export class DesignSetting extends Component {
     return !result || result.length === 0 ? null : result[0]
   }
 
-  render() {
+  render({awsState}) {
     return h(
       'div',
       {

@@ -81,7 +81,8 @@ export default class LeftSidebar extends Component {
       engineGameOngoing,
       showLeftSidebar,
       leftSidebarType,
-      consoleLog
+      consoleLog,
+      awsState
     },
     {peerListHeight, selectedEngineSyncerId}
   ) {
@@ -132,7 +133,7 @@ export default class LeftSidebar extends Component {
             onChange: this.handlePeerListHeightChange,
             onFinish: this.handlePeerListHeightFinish
           })
-        : h(DesignSetting, {})
+        : h(DesignSetting, {awsState})
     )
   }
 }
