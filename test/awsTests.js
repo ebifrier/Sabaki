@@ -6,7 +6,9 @@ describe('aws', () => {
   let awsInstanceName = null
   let awsInstance = null
 
-  before(done => {
+  before(function(done) {
+    this.timeout(30 * 1000)
+
     awsInstanceName = uuid()
     aws
       .launch(awsInstanceName, 't2.micro')
