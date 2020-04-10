@@ -4,7 +4,7 @@ import {h, Component} from 'preact'
 import SplitContainer from './helpers/SplitContainer.js'
 import GtpConsole from './sidebars/GtpConsole.js'
 import {EnginePeerList} from './sidebars/PeerList.js'
-import {MainOperation} from './sidebars/MainOperation.js'
+import {MainOperation, SettingsHeader} from './sidebars/MainOperation.js'
 
 const setting = remote.require('./setting')
 const peerListMinHeight = setting.get('view.peerlist_minheight')
@@ -133,7 +133,34 @@ export default class LeftSidebar extends Component {
             onChange: this.handlePeerListHeightChange,
             onFinish: this.handlePeerListHeightFinish
           })
-        : h(MainOperation, {awsState})
+        : h(
+            'div',
+            {
+              class: 'main-operation'
+            },
+
+            h(MainOperation, {awsState}),
+
+            h(SettingsHeader, {
+              title: 'エンジンログ'
+            }),
+            h(GtpConsole, {
+              show: showLeftSidebar,
+              consoleLog,
+              attachedEngine: attachedEngineSyncers
+                .map(syncer =>
+                  syncer.id !== selectedEngineSyncerId
+                    ? null
+                    : {
+                        name: syncer.engine.name,
+                        get commands() {
+                          return syncer.commands
+                        }
+                      }
+                )
+                .find(x => x != null)
+            })
+          )
     )
   }
 }

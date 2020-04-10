@@ -8,7 +8,12 @@ const dsetting = remote.require('./designsetting')
 const aws = remote.require('./aws')
 const t = i18n.context('PreferencesDrawer')
 
-let SettingsHeader = ({title, id = null, isOpen = null, setValue = null}) => {
+export const SettingsHeader = ({
+  title,
+  id = null,
+  isOpen = null,
+  setValue = null
+}) => {
   if (isOpen == null) {
     return h('div', {class: 'settings-header'}, h('label', {}, title))
   } else {
@@ -32,12 +37,12 @@ export class MainOperation extends Component {
 
     this.state = {
       testMode: dsetting.get('design.test_mode'),
-      isOpenAWS: true,
       isOpenBackground: true,
       isOpenOtherImage: false,
       isOpenBasic: false,
       isOpenGoban: false,
-      isOpenWinrate: false
+      isOpenWinrate: false,
+      isOpenLog: true
     }
   }
 
@@ -55,18 +60,13 @@ export class MainOperation extends Component {
   render({awsState}) {
     return h(
       'div',
-      {
-        class: 'design-setting'
-      },
+      {},
 
       h(
         'div',
-        {class: 'engines-list settings-list', style: {marginBottom: '16px'}},
+        {class: '', style: {marginBottom: '8px'}},
         h(SettingsHeader, {
-          title: 'AWS操作',
-          id: 'aws-operation',
-          isOpen: this.state.isOpenAWS,
-          setValue: v => this.setState({isOpenAWS: v})
+          title: 'AWS操作'
         }),
         h(
           'ul',

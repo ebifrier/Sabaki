@@ -1257,25 +1257,29 @@ header {
     background: none;
 }
 
-.settings-list {
-    height: initial;
-    color: #eee;
-    overflow-y: hidden;
+.main-operation {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
   }
-  .settings-list .settings-header {
+  .main-operation .gtp-console {
+    overflow: overlay;
+  }
+
+.settings-header {
     background-color: #1e1e1e;
     padding: 0.3em 0.1em 0.1em 0.1em;
     margin-top: 0.2em;
+    color: #eee;
   }
-  .settings-list .settings-header input[type="checkbox"] {
+  .settings-header input[type="checkbox"] {
     display: none;
   }
-  .settings-list .settings-header label {
+  .settings-header label {
     position: relative;
     display: block;
     cursor: pointer;
   }
-  .settings-list .settings-header label:after {
+  .settings-header input[type="checkbox"]:not(checked) + label:after {
     content: url(../node_modules/@primer/octicons/build/svg/triangle-right.svg);
     box-sizing: border-box;
     display: block;
@@ -1284,10 +1288,17 @@ header {
     right: 0.7em;
     top: 0.2em;
   }
-  .settings-list .settings-header input[type="checkbox"]:checked + label:after {
+  .settings-header input[type="checkbox"]:checked + label:after {
     content: url(../node_modules/@primer/octicons/build/svg/triangle-down.svg);
     right: 0.55em;
     top: 0.1em;
+  }
+
+.settings-list {
+    border: none;
+    height: initial;
+    color: #eee;
+    overflow-y: hidden;
   }
   .settings-list ul {
     background-color: rgba(38, 41, 44, .97);
@@ -1334,7 +1345,8 @@ header {
     margin-left: 0;
     cursor: pointer;
   }
-  .settings-list li button {
+
+.main-operation li button {
     display: inline-block;
     width: 40%;
     padding: 0.2em 0.5em;
@@ -1342,28 +1354,28 @@ header {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
     text-shadow: 0 1px 0 rgba(0,0,0,0.2);
   }
-  .settings-list li button:not(:disabled) {
+  .main-operation li button:not(:disabled) {
     cursor: pointer;
   }
-  .settings-list li button:hover:not(:disabled) {
+  .main-operation li button:hover:not(:disabled) {
     box-shadow: none;
     text-shadow: none;
   }
-  .settings-list li button + button {
+  .main-operation li button + button {
     margin-left: 4px;
   }
-  .settings-list li button.aws-launch {
+  .main-operation li button.aws-launch {
     background: #325d9e !important; /* #28921b */
     border: none; /* 1px #207515; /* 線色 */
   } 
-  .settings-list li button.aws-launch:hover:not(:disabled) {
+  .main-operation li button.aws-launch:hover:not(:disabled) {
     background: #28518e !important;
   }
-  .settings-list li button.aws-terminate {
+  .main-operation li button.aws-terminate {
     background: #962929 !important;
     border: none; 
   } 
-  .settings-list li button.aws-terminate:hover:not(:disabled) {
+  .main-operation li button.aws-terminate:hover:not(:disabled) {
     background: #8e1717 !important;
   }
 
