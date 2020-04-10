@@ -1,6 +1,6 @@
 import fs from 'fs'
 import EventEmitter from 'events'
-import {basename, extname} from 'path'
+import {basename, extname, resolve} from 'path'
 import {remote, ipcRenderer} from 'electron'
 import {h} from 'preact'
 import {v4 as uuid} from 'uuid'
@@ -137,10 +137,30 @@ class Sabaki extends EventEmitter {
     })
 
     aws.events.on('startAnalysis', ({instance}) => {
-      if (sabaki.state.analyzingEngineSyncerId == null) return
+      if (this.state.analyzingEngineSyncerId != null) return
+
+      let args = [
+        '-o "StrictHostKeyChecking=no"',
+        `-i "${resolve(__dirname, './bin/aiwithlive_igo.pem')}"`,
+        `ec2-user@${instance.PublicIpAddress}`,
+        `-t -t "docker run --rm --runtime=nvidia -it ebifrier/katago:latest-opencl"`
+      ]
+
+      let engine = {
+        name: 'aws',
+        path: resolve(__dirname, './bin/ssh.exe'),
+        args: args.join(' '),
+        commands: '',
+        analysis: true
+      }
+
+      setting.set('engines.list', [engine])
+      this.attachAndStartAnalysisWithDefaultEngine()
     })
 
-    aws.events.on('stopAnalysis', ({instance}) => {})
+    aws.events.on('stopAnalysis', () => {
+      this.stopAnalysis()
+    })
 
     // Bind state to settings
 
@@ -2156,6 +2176,47 @@ class Sabaki extends EventEmitter {
         args: [color, interval]
       })
     } catch (err) {}
+  }
+
+  getAnalysisEngineSyncerId(hasDefaultEngine = true) {
+    let preferredEngineSyncerId =
+      this.lastAnalyzingEngineSyncerId ||
+      this.state.attachedEngineSyncers
+        .filter(syncer => syncer.engine.analysis)
+        .map(syncer => syncer.id)[0]
+    if (preferredEngineSyncerId != null) {
+      return preferredEngineSyncerId
+    }
+
+    if (hasDefaultEngine) {
+      return null
+    }
+
+    return this.state.attachedEngineSyncers
+      .filter(syncer =>
+        syncer.commands.some(x =>
+          setting.get('engines.analyze_commands').includes(x)
+        )
+      )
+      .map(syncer => syncer.id)[0]
+  }
+
+  async attachAndStartAnalysis(engine) {
+    return new Promise((resolve, reject) => {
+      let [syncer] = this.attachEngines([engine], {autoStart: false})
+
+      syncer.on('initialized', ({error}) => {
+        if (error != null) {
+          reject(error)
+        } else {
+          this.startAnalysis(syncer.id)
+            .then(() => resolve(syncer))
+            .catch(err => reject(err))
+        }
+      })
+
+      syncer.controller.start()
+    })
   }
 
   async startAnalysis(syncerId) {

@@ -451,7 +451,6 @@ exports.get = function(props = {}) {
           accelerator: 'F4',
           click: async () => {
             if (sabaki.state.analyzingEngineSyncerId == null) {
-              console.log('come')
               let defaultEngine = setting
                 .get('engines.list')
                 .find(engine => engine.analysis)
