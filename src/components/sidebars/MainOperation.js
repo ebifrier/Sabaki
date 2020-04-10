@@ -131,7 +131,7 @@ export class MainOperation extends Component {
             h('input', {
               type: 'text',
               placeholder: t('Path'),
-              value: dsetting.get('design.background_path'),
+              defaultValue: dsetting.get('design.background_path'),
               onChange: evt =>
                 dsetting.set('design.background_path', evt.target.value)
             })
@@ -174,7 +174,7 @@ export class MainOperation extends Component {
             h('input', {
               type: 'text',
               placeholder: t('Path'),
-              value: dsetting.get('design.whitebar_path'),
+              defaultValue: dsetting.get('design.whitebar_path'),
               onChange: evt =>
                 dsetting.set('design.whitebar_path', evt.target.value)
             })
