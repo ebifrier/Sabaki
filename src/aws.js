@@ -164,9 +164,10 @@ let operateAWS = async (updateStateOnly = false) => {
     if (state === 'pending' || (state === 'running' && status !== 'ok')) {
       exports.set('awsState', 'pending')
     } else if (state === 'running' && status === 'ok') {
-      exports.set('awsState', 'running')
-      // start analysis
-      exports.events.emit('startAnalysis', {instance})
+      if (exports.get('awsState') !== 'running') {
+        exports.set('awsState', 'running')
+        exports.events.emit('startAnalysis', {instance})
+      }
     } else if (state === 'stopping' || state === 'shutting-down') {
       exports.set('awsState', 'shutting-down')
       if (!updateStateOnly) {
