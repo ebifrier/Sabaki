@@ -82,7 +82,8 @@ export default class LeftSidebar extends Component {
       showLeftSidebar,
       leftSidebarType,
       consoleLog,
-      awsState
+      awsState,
+      awsInTransition
     },
     {peerListHeight, selectedEngineSyncerId}
   ) {
@@ -139,7 +140,10 @@ export default class LeftSidebar extends Component {
               class: 'main-operation'
             },
 
-            h(MainOperation, {awsState}),
+            h(MainOperation, {
+              awsState,
+              awsInTransition
+            }),
 
             h(SettingsHeader, {
               title: 'エンジンログ'

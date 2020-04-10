@@ -57,7 +57,7 @@ export class MainOperation extends Component {
     return !result || result.length === 0 ? null : result[0]
   }
 
-  render({awsState}) {
+  render({awsState, awsInTransition}) {
     return h(
       'div',
       {},
@@ -78,7 +78,7 @@ export class MainOperation extends Component {
               'button',
               {
                 class: 'aws-launch',
-                disabled: awsState !== 'terminated',
+                disabled: awsInTransition || awsState !== 'terminated',
                 onClick: evt => aws.launchInstance()
               },
               'AWSを起動'
@@ -87,7 +87,10 @@ export class MainOperation extends Component {
               'button',
               {
                 class: 'aws-terminate',
-                disabled: awsState === 'terminated',
+                disabled:
+                  awsInTransition ||
+                  awsState === 'shutting-down' ||
+                  awsState === 'terminated',
                 onClick: evt => aws.terminateInstance()
               },
               'AWSを停止'

@@ -11,20 +11,28 @@ const KeyPairName = 'aiwithlive_igo'
 // Deep Learning AMI (Amazon Linux 2) Version 27.0
 const defaultImageId = 'ami-0f281e05283bd0b52'
 
-let eventEmitter = (() => {
-  let emitter = new EventEmitter()
-  emitter.setMaxListeners(50)
-  return emitter
-})()
-let values = {
-  awsImageId: defaultImageId,
-  awsInstanceName: `${os.hostname()}-${os.userInfo().username}`,
-  awsInstanceType: 'p2.xlarge',
-  awsState: ''
-}
+let eventEmitter = null
+let values = null
 let ec2 = null
 
 let initializeAWS = () => {
+  values = {
+    awsImageId: defaultImageId,
+    awsInstanceName: `${os.hostname()}-${os.userInfo().username}`,
+    awsInstanceType: 'p2.xlarge',
+    awsState: '',
+    awsInTransition: false
+  }
+
+  eventEmitter = new EventEmitter()
+  eventEmitter.setMaxListeners(50)
+
+  exports.events.on('change', ({key, value}) => {
+    if (key === 'awsState') {
+      exports.set('awsInTransition', false)
+    }
+  })
+
   //AWS.config.loadFromPath
   AWS.config.update({
     accessKeyId,
@@ -151,6 +159,8 @@ exports.launch = async (name = null, instanceType = 'p2.xlarge') => {
     ]
   }
 
+  exports.set('awsInTransition', true)
+
   let result = await ec2.runInstances(instanceParams).promise()
   return result.Instances.map(instance => initInstance(instance))[0]
 }
@@ -182,6 +192,7 @@ let operateAWS = async (updateStateOnly = false) => {
       exports.set('awsState', 'error')
     }
   } catch (err) {
+    exports.set('awsState', 'error')
     console.log('operateAWS:', err)
   }
 }
@@ -202,18 +213,18 @@ exports.terminateInstance = async () => {
   let instance = await exports.fetchInstanceByName()
   if (instance == null) return
 
+  exports.set('awsInTransition', true)
   exports.events.emit('stopAnalysis', {instance})
 
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
         await instance.terminate()
-        exports.set('awsState', 'shutting-down')
         resolve({})
       } catch (err) {
-        reject({err})
+        reject(err)
       }
-    }, 1000)
+    }, 500)
   })
 }
 
