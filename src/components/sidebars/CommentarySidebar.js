@@ -1,6 +1,7 @@
 import {h, Component} from 'preact'
 
 import {SettingsHeader} from './MainOperationSidebar.js'
+import sabaki from '../../modules/sabaki'
 
 export class CommentarySidebar extends Component {
   constructor(props) {
@@ -25,8 +26,8 @@ export class CommentarySidebar extends Component {
             'button',
             {
               class: 'aiwith-button big primary',
-              disabled: false,
-              onClick: evt => {}
+              disabled: sabaki.state.mode === 'commentary',
+              onClick: evt => sabaki.setMode('commentary')
             },
             '検討モードを開始'
           )
@@ -38,8 +39,8 @@ export class CommentarySidebar extends Component {
             'button',
             {
               class: 'aiwith-button big secondary',
-              disabled: false,
-              onClick: evt => {}
+              disabled: sabaki.state.mode === 'watch',
+              onClick: evt => sabaki.setMode('watch')
             },
             '本譜モードを開始'
           )
@@ -58,8 +59,8 @@ export class CommentarySidebar extends Component {
             'button',
             {
               class: 'aiwith-button big danger',
-              disabled: false,
-              onClick: evt => {}
+              disabled: sabaki.state.mode === 'play',
+              onClick: evt => sabaki.setMode('play')
             },
             '通常モードを開始'
           )
