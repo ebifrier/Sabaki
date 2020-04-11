@@ -39,12 +39,12 @@ class DesignApp extends Component {
     this.background = new Image()
     this.background.onload = () => this.onBackgroundLoaded()
     this.background.onerror = () => this.background.setAttribute('src', '')
-    this.loadImage(this.background, dsetting.get('design.background_path'))
+    this.loadImage(this.background, 'design.background_path')
 
     this.whiteBar = new Image()
     this.whiteBar.onload = async () => await this.onWhiteBarLoaded()
     this.whiteBar.onerror = () => this.whiteBar.setAttribute('src', '')
-    this.loadImage(this.whiteBar.src, dsetting.get('design.whitebar_path'))
+    this.loadImage(this.whiteBar, 'design.whitebar_path')
 
     let window = remote.getCurrentWindow()
     dsetting.events.on(window.id, 'change', this.onChangeSetting.bind(this))
@@ -70,21 +70,31 @@ class DesignApp extends Component {
     })
   }
 
-  onChangeSetting({key}) {
+  async onChangeSetting({key}) {
     if (key === 'design.background_path') {
-      this.loadImage(this.background, dsetting.get('design.background_path'))
+      await this.loadImage(this.background, 'design.background_path')
     } else if (key === 'design.whitebar_path') {
-      this.loadImage(this.whiteBar, dsetting.get('design.whitebar_path'))
+      await this.loadImage(this.whiteBar, 'design.whitebar_path')
     }
 
     this.forceUpdate()
   }
 
-  loadImage(image, src) {
-    let newImage = new Image()
-    newImage.onerror = () => (image.src = '')
-    newImage.onload = () => (image.src = src)
-    newImage.src = src
+  async loadImage(image, srcKey) {
+    return new Promise((resolve, reject) => {
+      let newImage = new Image()
+      let src = dsetting.get(srcKey)
+
+      newImage.onerror = () => {
+        image.src = ''
+        resolve()
+      }
+      newImage.onload = () => {
+        image.src = src
+        resolve()
+      }
+      newImage.src = src
+    })
   }
 
   onBackgroundLoaded() {
