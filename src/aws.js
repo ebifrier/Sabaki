@@ -176,7 +176,7 @@ let operateAWS = async (updateStateOnly = false) => {
     } else if (state === 'running' && status === 'ok') {
       if (exports.get('awsState') !== 'running') {
         exports.set('awsState', 'running')
-        exports.events.emit('startAnalysis', {instance})
+        exports.events.emit('attachEngine', {instance})
       }
     } else if (state === 'stopping' || state === 'shutting-down') {
       exports.set('awsState', 'shutting-down')
@@ -214,7 +214,7 @@ exports.terminateInstance = async () => {
   if (instance == null) return
 
   exports.set('awsInTransition', true)
-  exports.events.emit('stopAnalysis', {instance})
+  exports.events.emit('detachEngine', {instance})
 
   return new Promise((resolve, reject) => {
     setTimeout(async () => {

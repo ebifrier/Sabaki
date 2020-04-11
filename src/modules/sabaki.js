@@ -136,7 +136,7 @@ class Sabaki extends EventEmitter {
       this.setState(change)
     })
 
-    aws.events.on('startAnalysis', ({instance}) => {
+    aws.events.on('attachEngine', ({instance}) => {
       if (this.state.analyzingEngineSyncerId != null) return
 
       let args = [
@@ -158,8 +158,10 @@ class Sabaki extends EventEmitter {
       this.attachAndStartAnalysisWithDefaultEngine()
     })
 
-    aws.events.on('stopAnalysis', () => {
-      this.stopAnalysis()
+    aws.events.on('detachEngine', async () => {
+      await this.detachEngines(
+        this.state.attachedEngineSyncers.map(syncer => syncer.id)
+      )
     })
 
     // Bind state to settings
