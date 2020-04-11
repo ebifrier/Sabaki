@@ -785,20 +785,34 @@ exports.get = function(props = {}) {
       label: 'AI用メニュー',
       submenu: [
         {
-          label: 'デザイン設定を表示',
-          checked: !!showLeftSidebar && leftSidebarType === 'design',
+          label: '管理・操作用サイドバーを表示',
+          type: 'checkbox',
+          checked: !!showLeftSidebar && leftSidebarType === 'main-operation',
           click: () => {
-            if (setting.get('view.leftsidebar_type') === 'design') {
+            if (setting.get('view.leftsidebar_type') === 'main-operation') {
               toggleSetting('view.show_leftsidebar')
             } else {
               setting.set('view.show_leftsidebar', true)
-              setting.set('view.leftsidebar_type', 'design')
+              setting.set('view.leftsidebar_type', 'main-operation')
+            }
+          }
+        },
+        {
+          label: '解説用サイドバーを表示',
+          type: 'checkbox',
+          checked: !!showLeftSidebar && leftSidebarType === 'commentary',
+          click: () => {
+            if (setting.get('view.leftsidebar_type') === 'commentary') {
+              toggleSetting('view.show_leftsidebar')
+            } else {
+              setting.set('view.show_leftsidebar', true)
+              setting.set('view.leftsidebar_type', 'commentary')
             }
           }
         },
         {type: 'separator'},
         {
-          label: 'デザインを表示',
+          label: 'デザインウィンドウを表示',
           clickMain: 'newDesignWindow',
           neverDisable: true
         }

@@ -4,10 +4,8 @@ import {h, Component} from 'preact'
 import SplitContainer from './helpers/SplitContainer.js'
 import GtpConsole from './sidebars/GtpConsole.js'
 import {EnginePeerList} from './sidebars/PeerList.js'
-import {
-  MainOperationSidebar,
-  SettingsHeader
-} from './sidebars/MainOperationSidebar.js'
+import {MainOperationSidebar} from './sidebars/MainOperationSidebar.js'
+import {CommentarySidebar} from './sidebars/CommentarySidebar.js'
 
 const setting = remote.require('./setting')
 const peerListMinHeight = setting.get('view.peerlist_minheight')
@@ -146,7 +144,7 @@ export default class LeftSidebar extends Component {
             awsState,
             awsInTransition
           })
-        : null
+        : h(CommentarySidebar, {})
     )
   }
 }
