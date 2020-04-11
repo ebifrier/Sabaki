@@ -1259,10 +1259,13 @@ header {
 
 .main-operation {
     display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: repeat(10, auto) 1fr;
   }
   .main-operation .gtp-console {
     overflow: overlay;
+  }
+  .main-operation .gtp-console .log {
+    height: 100%;
   }
 
 .settings-header {
@@ -1295,21 +1298,12 @@ header {
   }
 
 .settings-list {
-    border: none;
-    height: initial;
-    color: #eee;
-    overflow-y: hidden;
-  }
-  .settings-list ul {
     background-color: rgba(38, 41, 44, .97);
+    color: #eee;
     padding: 0.1em 0.3em;
-    transition: .5s;
-
-    height: 0;
-    opacity: 0;
     display: none;
   }
-  .settings-list ul.expanded {
+  .settings-list.expanded {
     height: initial;
     opacity: 1;
     display: block;
@@ -1346,36 +1340,36 @@ header {
     cursor: pointer;
   }
 
-.main-operation li button {
-    display: inline-block;
-    width: 40%;
-    padding: 0.2em 0.5em;
+.aiwith-button {
+    width: 96%;
+    margin: 1% 2%;
+    padding: 0.25em 0.5em;
     border-radius: 4px;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
-    text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    text-shadow: 0 1px 0 rgba(0,0,0,0.4);
   }
-  .main-operation li button:not(:disabled) {
+  .aiwith-button:not(:disabled) {
     cursor: pointer;
   }
-  .main-operation li button:hover:not(:disabled) {
+  .aiwith-button:hover:not(:disabled) {
     box-shadow: none;
     text-shadow: none;
   }
-  .main-operation li button + button {
+  .aiwith-button + button {
     margin-left: 4px;
   }
-  .main-operation li button.aws-launch {
+  .aiwith-button.primary {
     background: #325d9e !important; /* #28921b */
     border: none; /* 1px #207515; /* 線色 */
   } 
-  .main-operation li button.aws-launch:hover:not(:disabled) {
+  .aiwith-button.primary:hover:not(:disabled) {
     background: #28518e !important;
   }
-  .main-operation li button.aws-terminate {
+  .aiwith-button.danger {
     background: #962929 !important;
     border: none; 
   } 
-  .main-operation li button.aws-terminate:hover:not(:disabled) {
+  .aiwith-button.danger:hover:not(:disabled) {
     background: #8e1717 !important;
   }
 
