@@ -7,17 +7,12 @@ import sabaki from './sabaki.js'
 
 const setting = remote.require('./setting')
 let lastLoadedData = null
-let recordWatching = false
-
-export function resetRecordWatchingData() {
-  lastLoadedData = null
-}
+let recordWatchingId = null
 
 export function startRecordWatching() {
   try {
-    if (!recordWatching) {
-      recordWatching = true
-      reloadRecord()
+    if (recordWatchingId == null) {
+      recordWatchingId = setInterval(() => reloadRecord(), 500)
     }
   } catch (err) {
     console.log(err.message)
@@ -26,20 +21,22 @@ export function startRecordWatching() {
 }
 
 export function stopRecordWatching() {
-  recordWatching = false
+  if (recordWatchingId != null) {
+    clearInterval(recordWatchingId)
+  }
 }
 
-export async function reloadRecord() {
+export async function reloadRecord(mode = null, force = false) {
   let filename = setting.get('.watch_filename')
   filename = 'C:/Users/ebifrier/Desktop/record.sgf'
 
   return new Promise((resolve, reject) => {
-    let processData = (error, data) => {
+    let processData = async (error, data) => {
       if (error) {
         throw error
       }
 
-      if (data == lastLoadedData) {
+      if (!force && data == lastLoadedData) {
         return
       }
 
@@ -48,13 +45,21 @@ export async function reloadRecord() {
         throw new Error('failed to load the record file')
       }
 
-      let tree = sabaki.state.gameTrees[sabaki.state.gameIndex]
-      if (tree == null) {
-        throw new Error('gameTree is null')
-      }
+      if ((mode || sabaki.state.mode) === 'watch') {
+        await sabaki.loadGameTrees([mainTree], {
+          suppressAskForSave: true,
+          clearHistory: true
+        })
+        sabaki.goToEnd()
+      } else {
+        let tree = sabaki.state.gameTrees[sabaki.state.gameIndex]
+        if (tree == null) {
+          throw new Error('gameTree is null')
+        }
 
-      let {newTree} = aiwith.loadTreeAppend(tree, mainTree)
-      sabaki.setCurrentTreePosition(newTree, sabaki.state.treePosition)
+        let {newTree} = aiwith.loadTreeAppend(tree, mainTree)
+        sabaki.setCurrentTreePosition(newTree, sabaki.state.treePosition)
+      }
 
       console.log('the new record file was loaded')
       lastLoadedData = data
@@ -62,14 +67,9 @@ export async function reloadRecord() {
 
     fs.readFile(filename, 'utf8', (error, data) => {
       try {
-        processData(error, data)
-        resolve({})
+        processData(error, data).then(() => resolve())
       } catch (error) {
         reject({error})
-      }
-
-      if (recordWatching) {
-        setTimeout(() => reloadRecord(), 1000)
       }
     })
   })

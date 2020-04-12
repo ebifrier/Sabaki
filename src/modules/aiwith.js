@@ -4,11 +4,21 @@ import * as fileformats from './fileformats/index.js'
 import * as sgf from './fileformats/sgf'
 import {loggers} from 'winston'
 
+function addMainProperty(tree) {
+  return tree.mutate(draft => {
+    let node = draft.root
+    while (node != null) {
+      draft.addToProperty(node.id, 'MAIN', true)
+      node = node.children[0]
+    }
+  })
+}
+
 export function loadTreeFromData(content) {
   try {
     let gameTrees = sgf.parse(content, () => {})
 
-    return gameTrees.length > 0 ? gameTrees[0] : null
+    return gameTrees.length > 0 ? addMainProperty(gameTrees[0]) : null
   } catch (err) {
     console.log(err.message)
     return null
@@ -21,7 +31,7 @@ export function loadTreeFromFile(filename) {
     let fileFormatModule = fileformats.getModuleByExtension(extension)
     let gameTrees = fileFormatModule.parseFile(filename, () => {})
 
-    return gameTrees.length > 0 ? gameTrees[0] : null
+    return gameTrees.length > 0 ? addMainProperty(gameTrees[0]) : null
   } catch (err) {
     console.log(err.message)
     return null
@@ -38,15 +48,15 @@ export function loadTreeAppend(tree, mainTree) {
     return
   }
 
-  let nextTreePosition = tree.root.id
+  let newTreePosition = tree.root.id
   let newTree = tree.mutate(draft => {
     for (let n of tree.listNodes()) {
       draft.removeProperty(n.id, 'MAIN')
     }
 
-    draft.addToProperty(nextTreePosition, 'MAIN', true)
-    while (nextTreePosition != null && mainTreeNode != null) {
-      nextTreePosition = draft.appendNode(nextTreePosition, {
+    draft.addToProperty(newTreePosition, 'MAIN', true)
+    while (newTreePosition != null && mainTreeNode != null) {
+      newTreePosition = draft.appendNode(newTreePosition, {
         ...mainTreeNode.data,
         MAIN: [true]
       })
@@ -54,5 +64,5 @@ export function loadTreeAppend(tree, mainTree) {
     }
   })
 
-  return {newTree, newTreePosition: nextTreePosition}
+  return {newTree, newTreePosition}
 }
