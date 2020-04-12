@@ -20,6 +20,7 @@ exports.get = function(props = {}) {
   let {
     disableAll,
     disableGameLoading,
+    mode,
     analysisType,
     showAnalysis,
     showCoordinates,
@@ -44,6 +45,7 @@ exports.get = function(props = {}) {
         {
           label: i18n.t('menu.file', '&New'),
           accelerator: 'CmdOrCtrl+N',
+          navigation: true,
           enabled: !disableGameLoading,
           click: () => sabaki.newFile({playSound: true, showInfo: true})
         },
@@ -57,6 +59,7 @@ exports.get = function(props = {}) {
         {
           label: i18n.t('menu.file', '&Open…'),
           accelerator: 'CmdOrCtrl+O',
+          navigation: true,
           enabled: !disableGameLoading,
           click: () => sabaki.loadFile()
         },
@@ -77,6 +80,7 @@ exports.get = function(props = {}) {
             {
               label: i18n.t('menu.file', '&Load SGF'),
               enabled: !disableGameLoading,
+              navigation: true,
               click: () => sabaki.loadContent(clipboard.readText(), 'sgf')
             },
             {
@@ -167,18 +171,21 @@ exports.get = function(props = {}) {
         {
           label: i18n.t('menu.edit', '&Undo'),
           accelerator: 'CmdOrCtrl+Z',
+          navigation: true,
           click: () => sabaki.undo()
         },
         {
           label: i18n.t('menu.edit', 'Re&do'),
           accelerator:
             process.platform === 'win32' ? 'CmdOrCtrl+Y' : 'CmdOrCtrl+Shift+Z',
+          navigation: true,
           click: () => sabaki.redo()
         },
         {type: 'separator'},
         {
           label: i18n.t('menu.edit', 'Toggle &Edit Mode'),
           accelerator: 'CmdOrCtrl+E',
+          navigation: true,
           click: () =>
             sabaki.setMode(sabaki.state.mode === 'edit' ? 'play' : 'edit')
         },
@@ -241,32 +248,39 @@ exports.get = function(props = {}) {
         {type: 'separator'},
         {
           label: i18n.t('menu.edit', '&Copy Variation'),
+          navigation: true,
           click: () => sabaki.copyVariation(sabaki.state.treePosition)
         },
         {
           label: i18n.t('menu.edit', 'Cu&t Variation'),
+          navigation: true,
           click: () => sabaki.cutVariation(sabaki.state.treePosition)
         },
         {
           label: i18n.t('menu.edit', '&Paste Variation'),
+          navigation: true,
           click: () => sabaki.pasteVariation(sabaki.state.treePosition)
         },
         {type: 'separator'},
         {
           label: i18n.t('menu.edit', 'Make Main &Variation'),
+          navigation: true,
           click: () => sabaki.makeMainVariation(sabaki.state.treePosition)
         },
         {
           label: i18n.t('menu.edit', 'Shift &Left'),
+          navigation: true,
           click: () => sabaki.shiftVariation(sabaki.state.treePosition, -1)
         },
         {
           label: i18n.t('menu.edit', 'Shift Ri&ght'),
+          navigation: true,
           click: () => sabaki.shiftVariation(sabaki.state.treePosition, 1)
         },
         {type: 'separator'},
         {
           label: i18n.t('menu.edit', '&Flatten'),
+          navigation: true,
           click: () => sabaki.flattenVariation(sabaki.state.treePosition)
         },
         {
@@ -275,10 +289,12 @@ exports.get = function(props = {}) {
             process.platform === 'darwin'
               ? 'CmdOrCtrl+Backspace'
               : 'CmdOrCtrl+Delete',
+          navigation: true,
           click: () => sabaki.removeNode(sabaki.state.treePosition)
         },
         {
           label: i18n.t('menu.edit', 'Remove &Other Variations'),
+          navigation: true,
           click: () => sabaki.removeOtherVariations(sabaki.state.treePosition)
         }
       ]
@@ -290,12 +306,14 @@ exports.get = function(props = {}) {
         {
           label: i18n.t('menu.find', 'Toggle &Find Mode'),
           accelerator: 'CmdOrCtrl+F',
+          navigation: true,
           click: () =>
             sabaki.setMode(sabaki.state.mode === 'find' ? 'play' : 'find')
         },
         {
           label: i18n.t('menu.find', 'Find &Next'),
           accelerator: 'F3',
+          navigation: true,
           click: () => {
             sabaki.setMode('find')
             sabaki.findMove(1, {
@@ -307,6 +325,7 @@ exports.get = function(props = {}) {
         {
           label: i18n.t('menu.find', 'Find &Previous'),
           accelerator: 'Shift+F3',
+          navigation: true,
           click: () => {
             sabaki.setMode('find')
             sabaki.findMove(-1, {
@@ -319,6 +338,7 @@ exports.get = function(props = {}) {
         {
           label: i18n.t('menu.find', 'Toggle &Hotspot'),
           accelerator: 'CmdOrCtrl+B',
+          navigation: true,
           click: () =>
             sabaki.setComment(sabaki.state.treePosition, {
               hotspot:
@@ -329,11 +349,13 @@ exports.get = function(props = {}) {
         {
           label: i18n.t('menu.find', 'Jump to Ne&xt Hotspot'),
           accelerator: 'F2',
+          navigation: true,
           click: () => sabaki.findHotspot(1)
         },
         {
           label: i18n.t('menu.find', 'Jump to Pre&vious Hotspot'),
           accelerator: 'Shift+F2',
+          navigation: true,
           click: () => sabaki.findHotspot(-1)
         }
       ]
@@ -345,66 +367,78 @@ exports.get = function(props = {}) {
         {
           label: i18n.t('menu.navigation', '&Back'),
           accelerator: 'Up',
+          navigation: true,
           click: () => sabaki.goStep(-1)
         },
         {
           label: i18n.t('menu.navigation', '&Forward'),
           accelerator: 'Down',
+          navigation: true,
           click: () => sabaki.goStep(1)
         },
         {type: 'separator'},
         {
           label: i18n.t('menu.navigation', 'Go to &Previous Fork'),
           accelerator: 'CmdOrCtrl+Up',
+          navigation: true,
           click: () => sabaki.goToPreviousFork()
         },
         {
           label: i18n.t('menu.navigation', 'Go to &Next Fork'),
           accelerator: 'CmdOrCtrl+Down',
+          navigation: true,
           click: () => sabaki.goToNextFork()
         },
         {type: 'separator'},
         {
           label: i18n.t('menu.navigation', 'Go to Previous Commen&t'),
           accelerator: 'CmdOrCtrl+Shift+Up',
+          navigation: true,
           click: () => sabaki.goToComment(-1)
         },
         {
           label: i18n.t('menu.navigation', 'Go to Next &Comment'),
           accelerator: 'CmdOrCtrl+Shift+Down',
+          navigation: true,
           click: () => sabaki.goToComment(1)
         },
         {type: 'separator'},
         {
           label: i18n.t('menu.navigation', 'Go to Be&ginning'),
           accelerator: 'Home',
+          navigation: true,
           click: () => sabaki.goToBeginning()
         },
         {
           label: i18n.t('menu.navigation', 'Go to &End'),
           accelerator: 'End',
+          navigation: true,
           click: () => sabaki.goToEnd()
         },
         {type: 'separator'},
         {
           label: i18n.t('menu.navigation', 'Go to &Main Variation'),
           accelerator: 'CmdOrCtrl+Left',
+          navigation: true,
           click: () => sabaki.goToMainVariation()
         },
         {
           label: i18n.t('menu.navigation', 'Go to Previous &Variation'),
           accelerator: 'Left',
+          navigation: true,
           click: () => sabaki.goToSiblingVariation(-1)
         },
         {
           label: i18n.t('menu.navigation', 'Go to Next Va&riation'),
           accelerator: 'Right',
+          navigation: true,
           click: () => sabaki.goToSiblingVariation(1)
         },
         {type: 'separator'},
         {
           label: i18n.t('menu.navigation', 'Go to Move N&umber'),
           accelerator: 'CmdOrCtrl+G',
+          navigation: true,
           click: async () => {
             let value = await dialog.showInputBox(
               i18n.t('menu.navigation', 'Enter a move number to go to')
@@ -419,11 +453,13 @@ exports.get = function(props = {}) {
         {
           label: i18n.t('menu.navigation', 'Go to Ne&xt Game'),
           accelerator: 'CmdOrCtrl+PageDown',
+          navigation: true,
           click: () => sabaki.goToSiblingGame(1)
         },
         {
           label: i18n.t('menu.navigation', 'Go to Previou&s Game'),
           accelerator: 'CmdOrCtrl+PageUp',
+          navigation: true,
           click: () => sabaki.goToSiblingGame(-1)
         }
       ]
@@ -968,9 +1004,9 @@ exports.get = function(props = {}) {
       // Handle disableAll prop
 
       if (
-        disableAll &&
         !item.neverDisable &&
-        !('submenu' in item || 'role' in item)
+        ((disableAll && !('submenu' in item || 'role' in item)) ||
+          (mode === 'watch' && !!item.navigation))
       ) {
         item.enabled = false
       }

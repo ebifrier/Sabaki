@@ -94,6 +94,7 @@ class App extends Component {
       '#main main, #graph, #winrategraph'
     )) {
       el.addEventListener('wheel', evt => {
+        if (sabaki.state.mode === 'watch') return
         evt.preventDefault()
 
         if (this.residueDeltaY == null) this.residueDeltaY = 0
@@ -113,6 +114,7 @@ class App extends Component {
 
     document.body.addEventListener('dragover', evt => evt.preventDefault())
     document.body.addEventListener('drop', evt => {
+      if (sabaki.state.mode === 'watch') return
       evt.preventDefault()
 
       if (evt.dataTransfer.files.length === 0) return
@@ -122,6 +124,8 @@ class App extends Component {
     // Handle keys
 
     document.addEventListener('keydown', evt => {
+      if (sabaki.state.mode === 'watch') return
+
       if (evt.key === 'Escape') {
         if (sabaki.state.openDrawer != null) {
           sabaki.closeDrawer()
@@ -171,6 +175,7 @@ class App extends Component {
     })
 
     document.addEventListener('keyup', evt => {
+      if (sabaki.state.mode === 'watch') return
       if (['ArrowUp', 'ArrowDown'].includes(evt.key)) {
         sabaki.stopAutoscrolling()
       }
@@ -338,6 +343,7 @@ class App extends Component {
       h(MainMenu, {
         showMenuBar: state.showMenuBar,
         disableAll: state.busy > 0,
+        mode: state.mode,
         analysisType: state.analysisType,
         showAnalysis: state.showAnalysis,
         showCoordinates: state.showCoordinates,

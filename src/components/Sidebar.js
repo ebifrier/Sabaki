@@ -24,6 +24,8 @@ export default class Sidebar extends Component {
     }
 
     this.handleGraphNodeClick = ({button, gameTree, treePosition, x, y}) => {
+      if (sabaki.state.mode === 'watch') return
+
       if (button === 0) {
         sabaki.setCurrentTreePosition(gameTree, treePosition)
       } else {
@@ -32,6 +34,7 @@ export default class Sidebar extends Component {
     }
 
     this.handleSliderChange = ({percent}) => {
+      if (sabaki.state.mode === 'watch') return
       let moveNumber = Math.round(
         (this.props.gameTree.getHeight() - 1) * percent
       )
@@ -39,6 +42,7 @@ export default class Sidebar extends Component {
     }
 
     this.handleWinrateGraphChange = ({index}) => {
+      if (sabaki.state.mode === 'watch') return
       sabaki.goToMoveNumber(index)
     }
 

@@ -897,7 +897,9 @@ class Sabaki extends EventEmitter {
 
     let [vx, vy] = vertex
 
-    if (['play', 'autoplay'].includes(this.state.mode)) {
+    if (this.state.mode === 'watch') {
+      return
+    } else if (['play', 'autoplay', 'commentary'].includes(this.state.mode)) {
       if (button === 0) {
         if (board.get(vertex) === 0) {
           this.makeMove(vertex, {
