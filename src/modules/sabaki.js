@@ -19,6 +19,7 @@ import * as gobantransformer from './gobantransformer.js'
 import * as gtplogger from './gtplogger.js'
 import * as helper from './helper.js'
 import * as sound from './sound.js'
+import * as aiwithrenderer from './aiwithrenderer'
 
 deadstones.useFetch('./node_modules/@sabaki/deadstones/wasm/deadstones_bg.wasm')
 
@@ -336,6 +337,8 @@ class Sabaki extends EventEmitter {
         textarea.selectionStart = textarea.selectionEnd = 0
         textarea.focus()
       })
+    } else if (mode === 'watch') {
+      aiwithrenderer.reloadRecord(mode, true)
     }
 
     this.setState(stateChange)
@@ -625,7 +628,7 @@ class Sabaki extends EventEmitter {
 
     this.setBusy(true)
     if (this.state.openDrawer !== 'gamechooser') this.closeDrawer()
-    this.setMode('play')
+    if (this.state.mode !== 'watch') this.setMode('play')
 
     await helper.wait(setting.get('app.loadgame_delay'))
 

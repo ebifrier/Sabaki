@@ -24,7 +24,8 @@ let defaults = {
   'design.score_whitey': 200,
   'design.score_fontsize': 30,
   'design.background_path': './img/premium/background.png',
-  'design.whitebar_path': './img/premium/white_bar.png'
+  'design.whitebar_path': './img/premium/white_bar.png',
+  'record.watch_filepath': null
 }
 
 let eventEmitters = {}

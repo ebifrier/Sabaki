@@ -42,7 +42,7 @@ export class CommentarySidebar extends Component {
               disabled: sabaki.state.mode === 'watch',
               onClick: evt => sabaki.setMode('watch')
             },
-            '本譜モードを開始'
+            '対局観戦モードを開始'
           )
         ),
         h(

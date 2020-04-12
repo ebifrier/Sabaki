@@ -43,6 +43,7 @@ export class MainOperationSidebar extends Component {
       isOpenBasic: false,
       isOpenGoban: false,
       isOpenWinrate: false,
+      isOpenFilepath: false,
       isOpenLog: true
     }
   }
@@ -53,6 +54,15 @@ export class MainOperationSidebar extends Component {
       filters: [
         {name: t('Image Files'), extensions: ['jpg', 'jpeg', 'png', 'gif']}
       ]
+    })
+
+    return !result || result.length === 0 ? null : result[0]
+  }
+
+  openRecordPath() {
+    let result = showOpenDialog({
+      properties: ['openFile'],
+      filters: [{name: t('Record Files'), extensions: ['sgf']}]
     })
 
     return !result || result.length === 0 ? null : result[0]
@@ -445,6 +455,49 @@ export class MainOperationSidebar extends Component {
               dsetting.set('design.score_fontsize', evt.target.value)
           }),
           h('label', {}, 'pt')
+        )
+      ),
+
+      h(SettingsHeader, {
+        title: '本譜ファイル',
+        id: 'record-settings',
+        isOpen: this.state.isOpenFilepath,
+        setValue: v => this.setState({isOpenFilepath: v})
+      }),
+      h(
+        'ul',
+        {
+          class:
+            'engines-list settings-list' +
+            (this.state.isOpenFilepath ? ' expanded' : '')
+        },
+        h(
+          'li',
+          {},
+          h(
+            'a',
+            {
+              class: 'browse',
+              title: t('Browse…'),
+              onClick: () => {
+                let path = this.openRecordPath()
+                if (path != null) {
+                  dsetting.set('record.watch_filepath', path)
+                }
+              }
+            },
+            h('img', {
+              src:
+                './node_modules/@primer/octicons/build/svg/file-directory.svg'
+            })
+          ),
+          h('input', {
+            type: 'text',
+            placeholder: t('Path'),
+            defaultValue: dsetting.get('record.watch_filepath'),
+            onChange: evt =>
+              dsetting.set('record.watch_filepath', evt.target.value)
+          })
         )
       ),
 

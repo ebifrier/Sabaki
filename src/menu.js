@@ -821,7 +821,7 @@ exports.get = function(props = {}) {
       label: 'AI用メニュー',
       submenu: [
         {
-          label: '管理・操作用サイドバーを表示',
+          label: 'デザイン用サイドバーを表示',
           type: 'checkbox',
           checked: !!showLeftSidebar && leftSidebarType === 'main-operation',
           click: () => {
@@ -834,7 +834,13 @@ exports.get = function(props = {}) {
           }
         },
         {
-          label: '解説用サイドバーを表示',
+          label: 'デザインウィンドウを表示',
+          clickMain: 'newDesignWindow',
+          neverDisable: true
+        },
+        {type: 'separator'},
+        {
+          label: '解説者用サイドバーを表示',
           type: 'checkbox',
           checked: !!showLeftSidebar && leftSidebarType === 'commentary',
           click: () => {
@@ -845,12 +851,6 @@ exports.get = function(props = {}) {
               setting.set('view.leftsidebar_type', 'commentary')
             }
           }
-        },
-        {type: 'separator'},
-        {
-          label: 'デザインウィンドウを表示',
-          clickMain: 'newDesignWindow',
-          neverDisable: true
         }
       ]
     },
