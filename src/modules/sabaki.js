@@ -142,9 +142,9 @@ class Sabaki extends EventEmitter {
 
       let args = [
         '-o "StrictHostKeyChecking=no"',
-        `-i "${resolve(__dirname, './bin/aiwithlive_igo.pem')}"`,
+        `-i aiwithlive_igo.pem`,
         `ec2-user@${instance.PublicIpAddress}`,
-        `-t -t "docker run --rm --runtime=nvidia -it ebifrier/katago:latest-opencl"`
+        `-t "docker run --rm --runtime=nvidia -i ebifrier/katago:latest-opencl"`
       ]
 
       let engine = {
