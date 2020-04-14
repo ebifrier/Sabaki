@@ -57,7 +57,7 @@ class App extends Component {
 
     window.addEventListener('load', () => {
       sabaki.events.emit('ready')
-      aiwithrenderer.startRecordWatching()
+      aiwithrenderer.initialize()
     })
 
     ipcRenderer.on('load-file', (evt, ...args) => {

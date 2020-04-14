@@ -9,6 +9,18 @@ const designsetting = remote.require('./designsetting')
 let lastLoadedData = null
 let recordWatchingId = null
 
+export function initialize() {
+  sabaki.events.on('modeChange', ({mode}) => {
+    console.log('changeMode', mode)
+
+    if (['watch', 'commentary'].includes(mode)) {
+      reloadRecord(true)
+    }
+  })
+
+  startRecordWatching()
+}
+
 export function startRecordWatching() {
   try {
     if (recordWatchingId == null) {
@@ -26,7 +38,7 @@ export function stopRecordWatching() {
   }
 }
 
-export async function reloadRecord(mode = null, force = false) {
+export async function reloadRecord(force = false) {
   let loadRecord = async (error, data) => {
     if (error) {
       throw error
@@ -41,12 +53,27 @@ export async function reloadRecord(mode = null, force = false) {
       throw new Error('failed to load the record file')
     }
 
-    if ((mode || sabaki.state.mode) === 'watch') {
+    let mode = sabaki.state.mode
+    if (mode === 'watch') {
       await sabaki.loadGameTrees([mainTree], {
         suppressAskForSave: true,
         clearHistory: true
       })
       sabaki.goToEnd()
+      console.log('watch reloaded')
+    } else if (mode === 'commentary') {
+      let tree = sabaki.state.gameTrees[sabaki.state.gameIndex]
+      if (tree == null) {
+        throw new Error('gameTree is null')
+      }
+
+      let {newTree, newTreePosition} = aiwith.loadTreeAppend(tree, mainTree)
+      sabaki.setCurrentTreePosition(newTree, sabaki.state.treePosition)
+
+      let analyzingEngineSyncer = sabaki.inferredState.analyzingEngineSyncer
+      if (analyzingEngineSyncer != null) {
+        sabaki.analyzeMove(newTreePosition)
+      }
     } else {
       let tree = sabaki.state.gameTrees[sabaki.state.gameIndex]
       if (tree == null) {

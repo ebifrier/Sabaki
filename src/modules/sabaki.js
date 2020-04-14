@@ -337,12 +337,10 @@ class Sabaki extends EventEmitter {
         textarea.selectionStart = textarea.selectionEnd = 0
         textarea.focus()
       })
-    } else if (mode === 'watch') {
-      aiwithrenderer.reloadRecord(mode, true)
     }
 
     this.setState(stateChange)
-    this.events.emit('modeChange')
+    this.events.emit('modeChange', {mode})
   }
 
   openDrawer(drawer) {
@@ -1498,6 +1496,7 @@ class Sabaki extends EventEmitter {
     if (
       syncer != null &&
       navigated &&
+      this.state.mode !== 'commentary' &&
       (this.state.engineGameOngoing == null ||
         ![
           this.state.blackEngineSyncerId,
