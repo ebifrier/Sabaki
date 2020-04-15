@@ -71,6 +71,7 @@ class Sabaki extends EventEmitter {
       fuzzyStonePlacement: null,
       animateStonePlacement: null,
       boardTransformation: '',
+      mouseRelativePos: null,
 
       // Sidebar
 
@@ -182,7 +183,8 @@ class Sabaki extends EventEmitter {
     gameIndex,
     gameTrees,
     analysis,
-    analysisTreePosition
+    analysisTreePosition,
+    mouseRelativePos
   }) {
     if (treePosition != null || gameIndex != null || gameTrees != null) {
       let gameRoots =
@@ -195,6 +197,12 @@ class Sabaki extends EventEmitter {
     if (analysis != null && analysisTreePosition != null) {
       ipcRenderer.send('state-change', {
         change: {analysis, analysisTreePosition}
+      })
+    }
+
+    if (typeof mouseRelativePos !== 'undefined') {
+      ipcRenderer.send('state-change', {
+        change: {mouseRelativePos}
       })
     }
   }

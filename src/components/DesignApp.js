@@ -368,6 +368,7 @@ class DesignApp extends Component {
 
         dsetting.get('design.show_goban')
           ? h(Goban, {
+              ref: el => (this.goban = el),
               gameTree,
               treePosition,
               board,
@@ -387,6 +388,22 @@ class DesignApp extends Component {
               fuzzyStonePlacement: false,
               animateStonePlacement: true,
               transformation: state.boardTransformation
+            })
+          : null,
+
+        state.mouseRelativePos != null
+          ? h('img', {
+              src: './img/ui/cursor.png',
+              style: {
+                position: 'absolute',
+                left:
+                  state.mouseRelativePos.x * this.goban.element.clientWidth - 4,
+                top:
+                  state.mouseRelativePos.y * this.goban.element.clientHeight -
+                  4,
+                width: '48px',
+                height: '48px'
+              }
             })
           : null
       ),

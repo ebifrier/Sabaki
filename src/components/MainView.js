@@ -31,6 +31,7 @@ export default class MainView extends Component {
       })
 
     this.handleGobanVertexClick = this.handleGobanVertexClick.bind(this)
+    this.handleGobanVertexMove = this.handleGobanVertexMove.bind(this)
     this.handleGobanLineDraw = this.handleGobanLineDraw.bind(this)
   }
 
@@ -52,6 +53,14 @@ export default class MainView extends Component {
         this.setState({gobanCrosshair: false})
       }
     })
+
+    document.addEventListener('mouseout', evt => {
+      if (this.goban == null) return
+
+      if (evt.target === this.goban.element) {
+        sabaki.setState({mouseRelativePos: null})
+      }
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -62,6 +71,17 @@ export default class MainView extends Component {
 
   handleGobanVertexClick(evt) {
     sabaki.clickVertex(evt.vertex, evt)
+  }
+
+  handleGobanVertexMove(evt) {
+    if (this.goban == null) return
+
+    let basePos = this.goban.element.getBoundingClientRect()
+    let relativePos = {
+      x: (evt.clientX - basePos.x) / this.goban.element.clientWidth,
+      y: (evt.clientY - basePos.y) / this.goban.element.clientHeight
+    }
+    sabaki.setState({mouseRelativePos: relativePos})
   }
 
   handleGobanLineDraw(evt) {
@@ -133,6 +153,7 @@ export default class MainView extends Component {
         {ref: el => (this.mainElement = el)},
 
         h(Goban, {
+          ref: el => (this.goban = el),
           gameTree,
           treePosition,
           board,
@@ -168,6 +189,7 @@ export default class MainView extends Component {
           transformation: boardTransformation,
 
           onVertexClick: this.handleGobanVertexClick,
+          onVertexMouseMove: this.handleGobanVertexMove,
           onLineDraw: this.handleGobanLineDraw
         })
       ),
