@@ -154,6 +154,7 @@ export default class MainView extends Component {
           showCoordinates,
           showMoveColorization,
           showMoveNumbers: mode !== 'edit' && showMoveNumbers,
+          showSubMove: mode === 'commentary',
           showNextMoves: mode !== 'guess' && showNextMoves,
           showSiblings: mode !== 'guess' && showSiblings,
           fuzzyStonePlacement,

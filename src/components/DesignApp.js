@@ -382,6 +382,7 @@ class DesignApp extends Component {
 
               showCoordinates: false,
               showNextMoves: false,
+              showSubMove: true,
               showSiblings: false,
               fuzzyStonePlacement: false,
               animateStonePlacement: true,

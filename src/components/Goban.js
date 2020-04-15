@@ -227,6 +227,7 @@ export default class Goban extends Component {
       showCoordinates = false,
       showMoveColorization = true,
       showMoveNumbers = false,
+      showSubMove = false,
       showNextMoves = true,
       showSiblings = true,
       fuzzyStonePlacement = true,
@@ -354,7 +355,28 @@ export default class Goban extends Component {
 
     // Draw move numbers
 
-    if (showMoveNumbers) {
+    if (showSubMove) {
+      markerMap = markerMap.map(row => row.map(_ => null))
+
+      let history = [
+        ...gameTree.listNodesVertically(treePosition, -1, {})
+      ].reverse()
+
+      for (let node of history) {
+        if (!!node.data.MAIN) continue
+
+        let [x, y] =
+          node.data.B != null
+            ? sgf.parseVertex(node.data.B[0])
+            : node.data.W != null
+            ? sgf.parseVertex(node.data.W[0])
+            : [-1, -1]
+
+        if (markerMap[y] != null && x < markerMap[y].length) {
+          markerMap[y][x] = {type: 'square'}
+        }
+      }
+    } else if (showMoveNumbers) {
       markerMap = markerMap.map(row => row.map(_ => null))
 
       let history = [

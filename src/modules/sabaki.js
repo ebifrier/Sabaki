@@ -626,7 +626,7 @@ class Sabaki extends EventEmitter {
 
     this.setBusy(true)
     if (this.state.openDrawer !== 'gamechooser') this.closeDrawer()
-    if (this.state.mode !== 'watch') this.setMode('play')
+    if (!['watch', 'commentary'].includes(this.state.mode)) this.setMode('play')
 
     await helper.wait(setting.get('app.loadgame_delay'))
 
@@ -1112,7 +1112,11 @@ class Sabaki extends EventEmitter {
   }
 
   makeMove(vertex, {player = null, generateEngineMove = false} = {}) {
-    if (!['play', 'autoplay', 'guess'].includes(this.state.mode)) {
+    if (
+      !['play', 'autoplay', 'guess', 'commentary', 'watch'].includes(
+        this.state.mode
+      )
+    ) {
       this.closeDrawer()
       this.setMode('play')
     }
