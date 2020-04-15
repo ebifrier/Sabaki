@@ -26,10 +26,10 @@ export class CommentarySidebar extends Component {
             'button',
             {
               class: 'aiwith-button big primary',
-              disabled: sabaki.state.mode === 'commentary',
-              onClick: evt => sabaki.setMode('commentary')
+              disabled: sabaki.state.mode === 'watch',
+              onClick: evt => sabaki.setMode('watch')
             },
-            '検討モードを開始'
+            '対局観戦モード'
           )
         ),
         h(
@@ -39,10 +39,10 @@ export class CommentarySidebar extends Component {
             'button',
             {
               class: 'aiwith-button big secondary',
-              disabled: sabaki.state.mode === 'watch',
-              onClick: evt => sabaki.setMode('watch')
+              disabled: sabaki.state.mode === 'commentary',
+              onClick: evt => sabaki.setMode('commentary')
             },
-            '対局観戦モードを開始'
+            '検討モード'
           )
         ),
         h(
@@ -62,7 +62,7 @@ export class CommentarySidebar extends Component {
               disabled: sabaki.state.mode === 'play',
               onClick: evt => sabaki.setMode('play')
             },
-            '通常モードを開始'
+            '通常モード'
           )
         )
       )
