@@ -155,7 +155,10 @@ class Sabaki extends EventEmitter {
         analysis: true
       }
 
-      setting.set('engines.list', [engine])
+      let engines = setting.get('engines.list')
+      if (engines.length > 0) engines[0] = engine
+      else engines = [engine]
+      setting.set('engines.list', engines)
       this.attachAndStartAnalysisWithDefaultEngine()
     })
 
