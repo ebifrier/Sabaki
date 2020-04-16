@@ -31,7 +31,6 @@ export default class MainView extends Component {
       })
 
     this.handleGobanVertexClick = this.handleGobanVertexClick.bind(this)
-    this.handleGobanVertexMove = this.handleGobanVertexMove.bind(this)
     this.handleGobanLineDraw = this.handleGobanLineDraw.bind(this)
   }
 
@@ -54,12 +53,16 @@ export default class MainView extends Component {
       }
     })
 
-    document.addEventListener('mouseout', evt => {
+    document.addEventListener('mousemove', evt => {
       if (this.goban == null) return
 
-      if (evt.target === this.goban.element) {
-        sabaki.setState({mouseRelativePos: null})
-      }
+      let basePos = this.goban.element.getBoundingClientRect()
+      let x = (evt.clientX - basePos.x) / this.goban.element.offsetWidth
+      let y = (evt.clientY - basePos.y) / this.goban.element.offsetHeight
+      let mouseRelativePos =
+        x >= 0.0 && x <= 1.0 && y >= 0.0 && y <= 1.07 ? {x, y} : null
+
+      sabaki.setState({mouseRelativePos})
     })
   }
 
@@ -71,17 +74,6 @@ export default class MainView extends Component {
 
   handleGobanVertexClick(evt) {
     sabaki.clickVertex(evt.vertex, evt)
-  }
-
-  handleGobanVertexMove(evt) {
-    if (this.goban == null) return
-
-    let basePos = this.goban.element.getBoundingClientRect()
-    let relativePos = {
-      x: (evt.clientX - basePos.x) / this.goban.element.clientWidth,
-      y: (evt.clientY - basePos.y) / this.goban.element.clientHeight
-    }
-    sabaki.setState({mouseRelativePos: relativePos})
   }
 
   handleGobanLineDraw(evt) {
@@ -189,7 +181,6 @@ export default class MainView extends Component {
           transformation: boardTransformation,
 
           onVertexClick: this.handleGobanVertexClick,
-          onVertexMouseMove: this.handleGobanVertexMove,
           onLineDraw: this.handleGobanLineDraw
         })
       ),

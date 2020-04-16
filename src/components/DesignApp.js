@@ -397,10 +397,10 @@ class DesignApp extends Component {
               style: {
                 position: 'absolute',
                 left:
-                  state.mouseRelativePos.x * this.goban.element.clientWidth - 4,
+                  state.mouseRelativePos.x * this.goban.element.offsetWidth - 6,
                 top:
-                  state.mouseRelativePos.y * this.goban.element.clientHeight -
-                  4,
+                  state.mouseRelativePos.y * this.goban.element.offsetHeight -
+                  6,
                 width: '48px',
                 height: '48px'
               }
