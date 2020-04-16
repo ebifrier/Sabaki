@@ -153,6 +153,7 @@ class Sabaki extends EventEmitter {
   }
 
   emitStateChangeToRendererProcess({
+    mode,
     treePosition,
     gameIndex,
     gameTrees,
@@ -160,6 +161,12 @@ class Sabaki extends EventEmitter {
     analysisTreePosition,
     mouseRelativePos
   }) {
+    if (mode != null) {
+      ipcRenderer.send('state-change', {
+        change: {mode}
+      })
+    }
+
     if (treePosition != null || gameIndex != null || gameTrees != null) {
       let gameRoots =
         gameTrees != null ? gameTrees.map(tree => tree.root) : null
