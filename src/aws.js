@@ -11,15 +11,21 @@ const KeyPairName = 'aiwithlive_igo'
 // Deep Learning AMI (Amazon Linux 2) Version 27.0
 const defaultImageId = 'ami-0f281e05283bd0b52'
 
+// メインスレッド上でAWSのインスタンス立ち上げや状態監視などを行います。
+
 let eventEmitter = null
 let values = null
 let ec2 = null
 
+/**
+ * モジュールの初期化を行います。
+ */
 let initializeAWS = () => {
   values = {
     awsImageId: defaultImageId,
     awsInstanceName: `${os.hostname()}-${os.userInfo().username}`,
     awsInstanceType: 'p2.xlarge',
+    awsInstance: null,
     awsState: '',
     awsInTransition: false
   }
@@ -171,13 +177,12 @@ let operateAWS = async (updateStateOnly = false) => {
     let state = instance != null ? instance.State.Name : ''
     let status = instance != null ? await instance.fetchStatus() : null
 
+    exports.set('awsInstance', instance)
+
     if (state === 'pending' || (state === 'running' && status !== 'ok')) {
       exports.set('awsState', 'pending')
     } else if (state === 'running' && status === 'ok') {
-      if (exports.get('awsState') !== 'running') {
-        exports.set('awsState', 'running')
-        exports.events.emit('attachEngine', {instance})
-      }
+      exports.set('awsState', 'running')
     } else if (state === 'stopping' || state === 'shutting-down') {
       exports.set('awsState', 'shutting-down')
       if (!updateStateOnly) {
@@ -197,6 +202,9 @@ let operateAWS = async (updateStateOnly = false) => {
   }
 }
 
+/**
+ * AWSの状態を監視します。
+ */
 exports.updateState = async (repeat = true) => {
   await operateAWS(true)
 
@@ -205,18 +213,27 @@ exports.updateState = async (repeat = true) => {
   }
 }
 
+/**
+ * AWSのインスタンスが未起動であれば起動させます。
+ */
 exports.launchInstance = async () => {
   await operateAWS(false)
 }
 
+/**
+ * AWSインスタンスを終了させます。
+ */
 exports.terminateInstance = async () => {
   let instance = await exports.fetchInstanceByName()
   if (instance == null) return
 
+  // 状態遷移中フラグを立てることでボタン操作などを禁止します。
   exports.set('awsInTransition', true)
   exports.events.emit('detachEngine', {instance})
 
   return new Promise((resolve, reject) => {
+    // detachから少し間をあけることで
+    // エンジンの終了処理をきちんと行えるようにしています。
     setTimeout(async () => {
       try {
         await instance.terminate()

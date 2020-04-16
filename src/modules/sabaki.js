@@ -19,7 +19,6 @@ import * as gobantransformer from './gobantransformer.js'
 import * as gtplogger from './gtplogger.js'
 import * as helper from './helper.js'
 import * as sound from './sound.js'
-import * as aiwithrenderer from './aiwithrenderer'
 
 deadstones.useFetch('./node_modules/@sabaki/deadstones/wasm/deadstones_bg.wasm')
 
@@ -136,31 +135,6 @@ class Sabaki extends EventEmitter {
       let change = {}
       change[key] = value
       this.setState(change)
-    })
-
-    aws.events.on('attachEngine', ({instance}) => {
-      if (this.state.analyzingEngineSyncerId != null) return
-
-      let args = [
-        '-o "StrictHostKeyChecking=no"',
-        `-i aiwithlive_igo.pem`,
-        `ec2-user@${instance.PublicIpAddress}`,
-        `-t "docker run --rm --runtime=nvidia -i ebifrier/katago:latest-opencl"`
-      ]
-
-      let engine = {
-        name: 'aws',
-        path: resolve(__dirname, './bin/ssh.exe'),
-        args: args.join(' '),
-        commands: '',
-        analysis: true
-      }
-
-      let engines = setting.get('engines.list')
-      if (engines.length > 0) engines[0] = engine
-      else engines = [engine]
-      setting.set('engines.list', engines)
-      this.attachAndStartAnalysisWithDefaultEngine()
     })
 
     aws.events.on('detachEngine', async () => {

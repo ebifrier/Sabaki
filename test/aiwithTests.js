@@ -30,13 +30,6 @@ describe('aiwith', () => {
 
   describe('loadTreeAppend', () => {
     let testLoadTreeAppend = mainFilename => {
-      let filename = `${__dirname}/sgf/branch.sgf`
-      let tree = aiwithgo.loadTreeFromFile(filename)
-      assert.ok(tree != null)
-
-      let mainTree = aiwithgo.loadTreeFromFile(mainFilename)
-      let {newTree} = aiwithgo.loadTreeAppend(tree, mainTree)
-
       function generateMains(mainNodes) {
         let mains = []
         newTree.mutate(draft => {
@@ -50,6 +43,13 @@ describe('aiwith', () => {
         })
         return mains
       }
+
+      let filename = `${__dirname}/sgf/branch.sgf`
+      let tree = aiwithgo.loadTreeFromFile(filename)
+      assert.ok(tree != null)
+
+      let mainTree = aiwithgo.loadTreeFromFile(mainFilename)
+      let {newTree} = aiwithgo.loadTreeAppend(tree, mainTree)
 
       let mainNodes = Array.from(mainTree.listMainNodes())
       let mains = Array.from(generateMains(mainNodes))
