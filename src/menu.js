@@ -841,6 +841,20 @@ exports.get = function(props = {}) {
         },
         {type: 'separator'},
         {
+          label: '本譜入力用サイドバーを表示',
+          type: 'checkbox',
+          neverDisable: true,
+          checked: !!showLeftSidebar && leftSidebarType === 'recording',
+          click: () => {
+            if (setting.get('view.leftsidebar_type') === 'recording') {
+              toggleSetting('view.show_leftsidebar')
+            } else {
+              setting.set('view.show_leftsidebar', true)
+              setting.set('view.leftsidebar_type', 'recording')
+            }
+          }
+        },
+        {
           label: '解説用サイドバーを表示',
           type: 'checkbox',
           neverDisable: true,

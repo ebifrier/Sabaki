@@ -6,6 +6,7 @@ import GtpConsole from './sidebars/GtpConsole.js'
 import {EnginePeerList} from './sidebars/PeerList.js'
 import {MainOperationSidebar} from './sidebars/MainOperationSidebar.js'
 import {CommentarySidebar} from './sidebars/CommentarySidebar.js'
+import {RecordingSidebar} from './sidebars/RecordingSidebar.js'
 
 const setting = remote.require('./setting')
 const peerListMinHeight = setting.get('view.peerlist_minheight')
@@ -144,7 +145,9 @@ export default class LeftSidebar extends Component {
             awsState,
             awsInTransition
           })
-        : h(CommentarySidebar, {})
+        : leftSidebarType === 'commentary'
+        ? h(CommentarySidebar, {})
+        : h(RecordingSidebar, {})
     )
   }
 }
