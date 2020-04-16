@@ -8,6 +8,7 @@ import sabaki from '../modules/sabaki.js'
 import * as gametree from '../modules/gametree.js'
 
 const dsetting = remote.require('./designsetting')
+const setting = remote.require('./setting')
 const CanvasWidth = 1920
 const CanvasHeight = 1080
 
@@ -392,7 +393,10 @@ class DesignApp extends Component {
                 ? analysis
                 : null,
 
-              showCoordinates: false,
+              // 座標表示はメインと一致させるようにします。
+              // そうしないとマウスカーソルの表示位置がずれます。
+              showCoordinates: setting.get('view.show_coordinates'),
+              coordinatesType: setting.get('view.coordinates_type'),
               showNextMoves: false,
               showSubMove: true,
               showSiblings: false,
