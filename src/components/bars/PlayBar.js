@@ -130,7 +130,7 @@ export default class PlayBar extends Component {
       {
         class: classNames({
           hotspot: showHotspot,
-          current: ['play', 'recoding', 'watch', 'commentary'].includes(mode)
+          current: ['play', 'recording', 'watch', 'commentary'].includes(mode)
         })
       },
 

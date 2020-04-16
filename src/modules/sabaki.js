@@ -637,7 +637,8 @@ class Sabaki extends EventEmitter {
 
     this.setBusy(true)
     if (this.state.openDrawer !== 'gamechooser') this.closeDrawer()
-    if (!['watch', 'commentary'].includes(this.state.mode)) this.setMode('play')
+    if (!['recording', 'watch', 'commentary'].includes(this.state.mode))
+      this.setMode('play')
 
     await helper.wait(setting.get('app.loadgame_delay'))
 
@@ -911,7 +912,9 @@ class Sabaki extends EventEmitter {
 
     if (this.state.mode === 'watch') {
       return
-    } else if (['play', 'autoplay', 'commentary'].includes(this.state.mode)) {
+    } else if (
+      ['play', 'recording', 'autoplay', 'commentary'].includes(this.state.mode)
+    ) {
       if (button === 0) {
         if (board.get(vertex) === 0) {
           this.makeMove(vertex, {
@@ -1124,9 +1127,14 @@ class Sabaki extends EventEmitter {
 
   makeMove(vertex, {player = null, generateEngineMove = false} = {}) {
     if (
-      !['play', 'autoplay', 'guess', 'commentary', 'watch'].includes(
-        this.state.mode
-      )
+      ![
+        'play',
+        'autoplay',
+        'guess',
+        'recording',
+        'watch',
+        'commentary'
+      ].includes(this.state.mode)
     ) {
       this.closeDrawer()
       this.setMode('play')
@@ -2710,7 +2718,8 @@ class Sabaki extends EventEmitter {
       return
 
     this.closeDrawer()
-    this.setMode('play')
+    if (!['recording', 'watch', 'commentary'].includes(this.state.mode))
+      this.setMode('play')
 
     let {gameCurrents, gameTrees} = this.state
     let {gameTree: tree} = this.inferredState

@@ -13,10 +13,24 @@ export function initialize() {
   sabaki.events.on('modeChange', ({mode}) => {
     if (['watch', 'commentary'].includes(mode)) {
       reloadRecord(true)
+      startRecordWatching()
+    } else {
+      stopRecordWatching()
     }
   })
 
-  startRecordWatching()
+  sabaki.events.on('moveMake', () => {
+    if (sabaki.state.mode === 'recording') {
+      sabaki.removeOtherVariations(sabaki.state.treePosition, {
+        suppressConfirmation: true
+      })
+
+      let path = designsetting.get('record.watch_filepath')
+      if (path != null) {
+        sabaki.saveFile(path, false)
+      }
+    }
+  })
 }
 
 export function startRecordWatching() {
