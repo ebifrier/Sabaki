@@ -329,15 +329,26 @@ class DesignApp extends Component {
     }
   }
 
-  render(_, state) {
-    let gameTree = state.gameTrees[state.gameIndex]
-    let treePosition = state.treePosition
-    let analysis = this.getAnalysis(state.analysis)
+  render(
+    _,
+    {
+      mode,
+      gameTrees,
+      gameIndex,
+      treePosition,
+      analysis,
+      analysisTreePosition,
+      boardTransformation,
+      mouseRelativePos
+    }
+  ) {
+    let gameTree = gameTrees[gameIndex]
     let board = dsetting.get('design.test_mode')
       ? this.getTestBoard()
       : gameTree.get(treePosition) != null
       ? gametree.getBoard(gameTree, treePosition)
       : gametree.getBoard(gameTree, gameTree.root.id)
+    analysis = this.getAnalysis(analysis)
 
     if (this.canvas != null) {
       this.renderCanvas(analysis)
@@ -376,8 +387,8 @@ class DesignApp extends Component {
               analysis: dsetting.get('design.test_mode')
                 ? analysis
                 : dsetting.get('design.show_heatmap') &&
-                  state.analysisTreePosition != null &&
-                  state.analysisTreePosition === treePosition
+                  analysisTreePosition != null &&
+                  analysisTreePosition === treePosition
                 ? analysis
                 : null,
 
@@ -387,20 +398,17 @@ class DesignApp extends Component {
               showSiblings: false,
               fuzzyStonePlacement: false,
               animateStonePlacement: true,
-              transformation: state.boardTransformation
+              transformation: boardTransformation
             })
           : null,
 
-        state.mouseRelativePos != null
+        mode === 'commentary' && mouseRelativePos != null
           ? h('img', {
               src: './img/ui/cursor.png',
               style: {
                 position: 'absolute',
-                left:
-                  state.mouseRelativePos.x * this.goban.element.offsetWidth - 6,
-                top:
-                  state.mouseRelativePos.y * this.goban.element.offsetHeight -
-                  6,
+                left: mouseRelativePos.x * this.goban.element.offsetWidth - 6,
+                top: mouseRelativePos.y * this.goban.element.offsetHeight - 6,
                 width: '48px',
                 height: '48px'
               }

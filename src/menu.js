@@ -486,7 +486,9 @@ exports.get = function(props = {}) {
           label: i18n.t('menu.engines', 'Toggle &Analysis'),
           accelerator: 'F4',
           click: async () => {
-            if (sabaki.state.analyzingEngineSyncerId == null) {
+            if (sabaki.state.analyzingEngineSyncerId != null) {
+              sabaki.stopAnalysis()
+            } else {
               let defaultEngine = setting
                 .get('engines.list')
                 .find(engine => engine.analysis)
@@ -521,8 +523,6 @@ exports.get = function(props = {}) {
               } finally {
                 sabaki.setBusy(false)
               }
-            } else {
-              sabaki.stopAnalysis()
             }
           }
         },
@@ -841,20 +841,6 @@ exports.get = function(props = {}) {
         },
         {type: 'separator'},
         {
-          label: '本譜入力用サイドバーを表示',
-          type: 'checkbox',
-          neverDisable: true,
-          checked: !!showLeftSidebar && leftSidebarType === 'recording',
-          click: () => {
-            if (setting.get('view.leftsidebar_type') === 'recording') {
-              toggleSetting('view.show_leftsidebar')
-            } else {
-              setting.set('view.show_leftsidebar', true)
-              setting.set('view.leftsidebar_type', 'recording')
-            }
-          }
-        },
-        {
           label: '解説用サイドバーを表示',
           type: 'checkbox',
           neverDisable: true,
@@ -865,6 +851,20 @@ exports.get = function(props = {}) {
             } else {
               setting.set('view.show_leftsidebar', true)
               setting.set('view.leftsidebar_type', 'commentary')
+            }
+          }
+        },
+        {
+          label: '本譜入力用サイドバーを表示',
+          type: 'checkbox',
+          neverDisable: true,
+          checked: !!showLeftSidebar && leftSidebarType === 'recording',
+          click: () => {
+            if (setting.get('view.leftsidebar_type') === 'recording') {
+              toggleSetting('view.show_leftsidebar')
+            } else {
+              setting.set('view.show_leftsidebar', true)
+              setting.set('view.leftsidebar_type', 'recording')
             }
           }
         }
