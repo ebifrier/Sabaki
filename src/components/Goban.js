@@ -355,16 +355,18 @@ export default class Goban extends Component {
 
     // Draw move numbers
 
-    if (showSubMove) {
-      markerMap = markerMap.map(row => row.map(_ => null))
+    if (showSubMove || showMoveNumbers) {
+      if (showMoveNumbers) {
+        markerMap = markerMap.map(row => row.map(_ => null))
+      }
 
+      let board = gametree.getBoard(gameTree, treePosition)
       let history = [
         ...gameTree.listNodesVertically(treePosition, -1, {})
       ].reverse()
 
-      for (let node of history) {
-        if (!!node.data.MAIN) continue
-
+      for (let i = 0; i < history.length; i++) {
+        let node = history[i]
         let [x, y] =
           node.data.B != null
             ? sgf.parseVertex(node.data.B[0])
@@ -372,27 +374,12 @@ export default class Goban extends Component {
             ? sgf.parseVertex(node.data.W[0])
             : [-1, -1]
 
-        if (markerMap[y] != null && x < markerMap[y].length) {
+        if (markerMap[y] == null || x >= markerMap[y].length) continue
+
+        if (showSubMove) {
+          if (!board.get([x, y]) || !!node.data.MAIN) continue
           markerMap[y][x] = {type: 'square'}
-        }
-      }
-    } else if (showMoveNumbers) {
-      markerMap = markerMap.map(row => row.map(_ => null))
-
-      let history = [
-        ...gameTree.listNodesVertically(treePosition, -1, {})
-      ].reverse()
-
-      for (let i = 0; i < history.length; i++) {
-        let node = history[i]
-        let vertex = [-1, -1]
-
-        if (node.data.B != null) vertex = sgf.parseVertex(node.data.B[0])
-        else if (node.data.W != null) vertex = sgf.parseVertex(node.data.W[0])
-
-        let [x, y] = vertex
-
-        if (markerMap[y] != null && x < markerMap[y].length) {
+        } else {
           markerMap[y][x] = {type: 'label', label: i.toString()}
         }
       }

@@ -1575,26 +1575,22 @@ header {
   transform: scale(1, 1.07);
 }
 
-.shudan-vertex .shudan-marker::before,
-.shudan-vertex .shudan-marker::after {
-    display: none !important;
-  }
-  .shudan-vertex.shudan-sign_1 .shudan-marker::before,
-  .shudan-vertex.shudan-sign_1 .shudan-marker::after,
-  .shudan-vertex.shudan-sign_-1 .shudan-marker::before,
-  .shudan-vertex.shudan-sign_-1 .shudan-marker::after {
+.shudan-vertex.shudan-marker_square.shudan-sign_1 .shudan-marker::before,
+.shudan-vertex.shudan-marker_square.shudan-sign_1 .shudan-marker::after,
+.shudan-vertex.shudan-marker_square.shudan-sign_-1 .shudan-marker::before,
+.shudan-vertex.shudan-marker_square.shudan-sign_-1 .shudan-marker::after {
     display: block !important;
     width: 0.4em;
     height: 0.25em;
   }
-  .shudan-vertex.shudan-sign_1 .shudan-marker::before,
-  .shudan-vertex.shudan-sign_1 .shudan-marker::after {
+  .shudan-vertex.shudan-marker_square.shudan-sign_1 .shudan-marker::before,
+  .shudan-vertex.shudan-marker_square.shudan-sign_1 .shudan-marker::after {
     background: var(--shudan-black-foreground-color);
     border-color: transparent;
     color: var(--shudan-black-foreground-color);
   }
-  .shudan-vertex.shudan-sign_-1 .shudan-marker::before,
-  .shudan-vertex.shudan-sign_-1 .shudan-marker::after {
+  .shudan-vertex.shudan-marker_square.shudan-sign_-1 .shudan-marker::before,
+  .shudan-vertex.shudan-marker_square.shudan-sign_-1 .shudan-marker::after {
     background: var(--shudan-white-foreground-color);
     border-color: transparent;
     color: var(--shudan-white-foreground-color);
