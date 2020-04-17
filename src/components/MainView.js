@@ -60,7 +60,7 @@ export default class MainView extends Component {
       let x = (evt.clientX - basePos.x) / this.goban.element.offsetWidth
       let y = (evt.clientY - basePos.y) / this.goban.element.offsetHeight
       let mouseRelativePos =
-        x >= 0.0 && x <= 1.0 && y >= 0.0 && y <= 1.07 ? {x, y} : null
+        x >= 0.0 && x <= 1.0 / 1.07 && y >= 0.0 && y <= 1.0 ? {x, y} : null
 
       sabaki.setState({mouseRelativePos})
     })

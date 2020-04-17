@@ -22,7 +22,7 @@ html, body {
   .design-main #goban {
     left: 0 !important;
     top: 0 !important;
-    transform-origin: top;
+    transform-origin: top left;
   }
   .design-main .movable-area {
     -webkit-app-region: drag;
