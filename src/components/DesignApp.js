@@ -411,6 +411,7 @@ class DesignApp extends Component {
               src: './img/ui/cursor.png',
               style: {
                 position: 'absolute',
+                zIndex: 1,
                 left: mouseRelativePos.x * this.goban.element.offsetWidth - 6,
                 top: mouseRelativePos.y * this.goban.element.offsetHeight - 6,
                 width: '48px',
