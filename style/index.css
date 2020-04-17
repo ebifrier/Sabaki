@@ -1559,20 +1559,18 @@ header {
 
 /* Override Shudan styles */
 
-.shudan-vertex .shudan-heatlabel::first-line {
-  font-weight: bold;
-}
-
-.shudan-vertex .shudan-heat {
-  transition: none;
+.shudan-goban {
+  transform: scale(calc(1 / 1.07), 1);
 }
 
 .shudan-vertex div {
-  transform: scale(1, 0.935);
-}
-
-.shudan-goban {
-  transform: scale(1, 1.07);
+    transform: scale(1.07, 1);
+  }
+  .shudan-vertex .shudan-heat {
+    transition: none;
+  }
+  .shudan-vertex .shudan-heatlabel::first-line {
+    font-weight: bold;
 }
 
 .shudan-vertex.shudan-marker_square.shudan-sign_1 .shudan-marker::before,
