@@ -138,7 +138,7 @@ export default class MainView extends Component {
 
     return h(
       'section',
-      {id: 'main'},
+      {id: 'main', class: mode},
 
       h(
         'main',

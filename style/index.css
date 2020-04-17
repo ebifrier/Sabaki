@@ -20,6 +20,15 @@
     bottom: 40px;
     background: #C2CB9C url('../img/ui/tatami.png') center;
   }
+  .watch main {
+    background-image: url('../img/ui/tatami_watch.png');
+  }
+  .commentary main {
+    background-image: url('../img/ui/tatami_commentary.png');
+  }
+  .recording main {
+    background-image: url('../img/ui/tatami_recording.png');
+  }
   #goban {
     box-sizing: border-box;
     box-shadow: 0 5px 20px rgba(20, 0, 15, .8);
