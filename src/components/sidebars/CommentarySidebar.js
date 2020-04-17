@@ -14,7 +14,7 @@ export class CommentarySidebar extends Component {
       {class: 'commentary'},
 
       h(SettingsHeader, {
-        title: 'モード切替'
+        title: '解説用サイドバー'
       }),
       h(
         'ul',

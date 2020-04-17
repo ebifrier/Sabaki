@@ -1,5 +1,7 @@
 import {h, Component} from 'preact'
 
+import sgf from '@sabaki/sgf'
+
 import {SettingsHeader} from './MainOperationSidebar.js'
 import sabaki from '../../modules/sabaki'
 
@@ -8,13 +10,27 @@ export class RecordingSidebar extends Component {
     super(props)
   }
 
-  render() {
+  render({gameTrees, gameIndex, treePosition}) {
+    let dataToText = (prefix, data) => {
+      let [x, y] = sgf.parseVertex(data)
+      return `${prefix}${x + 1}-${y + 1}`
+    }
+
+    let tree = gameTrees[gameIndex]
+    let node = tree.get(treePosition)
+    let nodeText =
+      node.data.B != null
+        ? dataToText('黒', node.data.B[0])
+        : node.data.W != null
+        ? dataToText('白', node.data.W[0])
+        : null
+
     return h(
       'div',
       {class: 'recording'},
 
       h(SettingsHeader, {
-        title: 'モード切替'
+        title: '本譜入力用サイドバー'
       }),
       h(
         'ul',
@@ -31,7 +47,34 @@ export class RecordingSidebar extends Component {
             },
             '棋譜入力モード'
           )
-        ),
+        )
+      ),
+
+      h(SettingsHeader, {
+        title: '最終着手'
+      }),
+      h(
+        'ul',
+        {},
+        h(
+          'li',
+          {},
+          h('input', {
+            type: 'text',
+            readOnly: true,
+            value: nodeText,
+            style: {
+              width: '100%',
+              background: 'black',
+              color: 'white'
+            }
+          })
+        )
+      ),
+
+      h(
+        'ul',
+        {},
         h(
           'li',
           {

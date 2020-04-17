@@ -76,6 +76,9 @@ export default class LeftSidebar extends Component {
 
   render(
     {
+      gameTrees,
+      gameIndex,
+      treePosition,
       attachedEngineSyncers,
       analyzingEngineSyncerId,
       blackEngineSyncerId,
@@ -147,7 +150,11 @@ export default class LeftSidebar extends Component {
           })
         : leftSidebarType === 'commentary'
         ? h(CommentarySidebar, {})
-        : h(RecordingSidebar, {})
+        : h(RecordingSidebar, {
+            gameTrees,
+            gameIndex,
+            treePosition
+          })
     )
   }
 }
