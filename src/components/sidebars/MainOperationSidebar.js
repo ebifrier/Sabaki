@@ -273,7 +273,7 @@ export class MainOperationSidebar extends Component {
             max: 100,
             step: 1,
             disabled: !this.state.testMode,
-            value: dsetting.get('design.test_winrate'),
+            defaultValue: dsetting.get('design.test_winrate'),
             onChange: evt =>
               dsetting.set('design.test_winrate', evt.target.value)
           })
@@ -317,7 +317,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 100,
             step: 0.1,
-            value: dsetting.get('design.goban_left'),
+            defaultValue: dsetting.get('design.goban_left'),
             onChange: evt => dsetting.set('design.goban_left', evt.target.value)
           }),
           h('label', {}, '%')
@@ -331,7 +331,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 100,
             step: 0.1,
-            value: dsetting.get('design.goban_top'),
+            defaultValue: dsetting.get('design.goban_top'),
             onChange: evt => dsetting.set('design.goban_top', evt.target.value)
           }),
           h('label', {}, '%')
@@ -345,7 +345,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 100,
             step: 0.1,
-            value: dsetting.get('design.goban_right'),
+            defaultValue: dsetting.get('design.goban_right'),
             onChange: evt =>
               dsetting.set('design.goban_right', evt.target.value)
           }),
@@ -360,7 +360,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 100,
             step: 0.1,
-            value: dsetting.get('design.goban_bottom'),
+            defaultValue: dsetting.get('design.goban_bottom'),
             onChange: evt =>
               dsetting.set('design.goban_bottom', evt.target.value)
           }),
@@ -390,7 +390,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 2000,
             step: 1,
-            value: dsetting.get('design.score_blackx'),
+            defaultValue: dsetting.get('design.score_blackx'),
             onChange: evt =>
               dsetting.set('design.score_blackx', evt.target.value)
           }),
@@ -405,7 +405,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 2000,
             step: 1,
-            value: dsetting.get('design.score_blacky'),
+            defaultValue: dsetting.get('design.score_blacky'),
             onChange: evt =>
               dsetting.set('design.score_blacky', evt.target.value)
           }),
@@ -420,7 +420,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 2000,
             step: 1,
-            value: dsetting.get('design.score_whitex'),
+            defaultValue: dsetting.get('design.score_whitex'),
             onChange: evt =>
               dsetting.set('design.score_whitex', evt.target.value)
           }),
@@ -435,7 +435,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 2000,
             step: 1,
-            value: dsetting.get('design.score_whitey'),
+            defaultValue: dsetting.get('design.score_whitey'),
             onChange: evt =>
               dsetting.set('design.score_whitey', evt.target.value)
           }),
@@ -450,7 +450,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 100,
             step: 1,
-            value: dsetting.get('design.score_fontsize'),
+            defaultValue: dsetting.get('design.score_fontsize'),
             onChange: evt =>
               dsetting.set('design.score_fontsize', evt.target.value)
           }),
