@@ -43,7 +43,7 @@ export function initialize() {
     }
   })
 
-  sabaki.events.on('moveMake', () => {
+  let onTreeChanged = () => {
     if (sabaki.state.mode === 'recording') {
       // 本譜入力モードでは手が進むと同時に、余計な分岐を削除し
       // 棋譜をファイルに出力します。
@@ -56,7 +56,11 @@ export function initialize() {
         sabaki.saveFile(path, false)
       }
     }
-  })
+  }
+
+  sabaki.events.on('fileLoad', onTreeChanged)
+  sabaki.events.on('moveMake', onTreeChanged)
+  sabaki.events.on('nodeRemove', onTreeChanged)
 
   // aws.events.on(...)はタイミング的に呼ばれないことがあるため
   // AWSが起動していれば自動的にエンジンを起動します。

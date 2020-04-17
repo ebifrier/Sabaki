@@ -2650,7 +2650,9 @@ class Sabaki extends EventEmitter {
       return
 
     this.closeDrawer()
-    this.setMode('play')
+    if (!['recording', 'watch', 'commentary'].includes(this.state.mode)) {
+      this.setMode('play')
+    }
 
     // Remove node
 
@@ -2681,6 +2683,8 @@ class Sabaki extends EventEmitter {
     })
 
     this.setCurrentTreePosition(newTree, noParent ? node.id : node.parentId)
+
+    this.events.emit('nodeRemove', {})
   }
 
   removeOtherVariations(treePosition, {suppressConfirmation = false} = {}) {
