@@ -6,41 +6,36 @@ html, body {
 }
 
 .design-main {
-  background: none;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-}
-.design-main .background {
-  width: 100%;
-  height: 100%;
-}
-.design-main .goban-wrap {
-  position: absolute;
-  bottom: 10%;
-  top: 10%;
-  left: 50%;
-  right: 10%;
-}
-.design-main #goban {
-  left: 0 !important;
-  top: 0 !important;
-  transform-origin: top;
-}
-.design-main .movable-area {
-  -webkit-app-region: drag;
-  display: block;
-  position: absolute;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: green;
-  opacity: 0;
-  margin: 16px;
-}
-
-.design-main .shudan-goban .shudan-heatlabel {
-  font-size: 0.66em;
+    background: none;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  .design-main .background {
+    width: 100%;
+    height: 100%;
+  }
+  .design-main .goban-wrap {
+    position: absolute;
+  }
+  .design-main #goban {
+    left: 0 !important;
+    top: 0 !important;
+    transform-origin: top;
+  }
+  .design-main .movable-area {
+    -webkit-app-region: drag;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: green;
+    opacity: 0;
+    margin: 16px;
+  }
+  .design-main .shudan-goban .shudan-heatlabel {
+    font-size: 0.66em;
 }

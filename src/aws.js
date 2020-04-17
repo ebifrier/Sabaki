@@ -195,6 +195,7 @@ let operateAWS = async (updateStateOnly = false) => {
       }
     } else {
       exports.set('awsState', 'error')
+      console.log('unknown aws state:', state, status)
     }
   } catch (err) {
     exports.set('awsState', 'error')
