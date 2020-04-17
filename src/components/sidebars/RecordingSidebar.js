@@ -11,19 +11,21 @@ export class RecordingSidebar extends Component {
   }
 
   render({gameTrees, gameIndex, treePosition}) {
-    let dataToText = (prefix, data) => {
-      let [x, y] = sgf.parseVertex(data)
-      return `${prefix}${x + 1}-${y + 1}`
+    let getNodeText = node => {
+      let getDataText = (prefix, data) => {
+        let [x, y] = sgf.parseVertex(data)
+        return `${prefix}${x + 1}-${y + 1}`
+      }
+
+      return node.data.B != null
+        ? getDataText('黒', node.data.B[0])
+        : node.data.W != null
+        ? getDataText('白', node.data.W[0])
+        : null
     }
 
     let tree = gameTrees[gameIndex]
     let node = tree.get(treePosition)
-    let nodeText =
-      node.data.B != null
-        ? dataToText('黒', node.data.B[0])
-        : node.data.W != null
-        ? dataToText('白', node.data.W[0])
-        : null
 
     return h(
       'div',
@@ -62,7 +64,7 @@ export class RecordingSidebar extends Component {
           h('input', {
             type: 'text',
             readOnly: true,
-            value: nodeText,
+            value: getNodeText(node),
             style: {
               width: '100%',
               background: 'black',
