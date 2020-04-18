@@ -873,6 +873,23 @@ class Sabaki extends EventEmitter {
     return null
   }
 
+  askForAWS() {
+    let awsState = this.state.awsState
+
+    if (awsState === 'pending' || awsState === 'running') {
+      let answer = dialog.showMessageBox(
+        'AWSが起動していますが、アプリを終了してよろしいですか？',
+        'warning',
+        ['はい', 'いいえ'],
+        1
+      )
+
+      if (answer === 1) return false
+    }
+
+    return true
+  }
+
   askForSave() {
     let t = i18n.context('sabaki.file')
     let hash = this.generateTreeHash()
