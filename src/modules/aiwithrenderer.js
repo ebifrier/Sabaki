@@ -153,7 +153,7 @@ export function stopRecordWatching() {
  */
 export async function reloadRecord(force = false) {
   let loadRecord = async data => {
-    if (!force && data == lastLoadedData) {
+    if (!force && data === lastLoadedData) {
       return
     }
 
@@ -164,13 +164,41 @@ export async function reloadRecord(force = false) {
       throw new Error('failed to load the record file')
     }
 
-    if (['recording', 'watch'].includes(sabaki.state.mode)) {
+    if (
+      sabaki.state.mode === 'recording' ||
+      (sabaki.state.mode === 'watch' && data !== lastLoadedData)
+    ) {
       // 本譜入力モード、対局観戦モードでは単に棋譜を読み込みます。
       await sabaki.loadGameTrees([mainTree], {
         suppressAskForSave: true,
         clearHistory: true
       })
       sabaki.goToEnd()
+    } else if (sabaki.state.mode === 'watch' && data === lastLoadedData) {
+      // 対局観戦モードに移行するとき、読み込んだ棋譜に変更がなければ
+      // 検討を中断させないよう余計なノードを削除するようにします。
+      let tree = sabaki.state.gameTrees[sabaki.state.gameIndex]
+      let newTreePosition = null
+      let newTree = tree.mutate(draft => {
+        for (let node of [...tree.listNodes()].reverse()) {
+          if (!!node.data.MAIN) {
+            if (newTreePosition == null) newTreePosition = node.id
+          } else {
+            draft.removeNode(node.id)
+          }
+        }
+      })
+      sabaki.setCurrentTreePosition(newTree, newTreePosition, {
+        updateAnalyze: false
+      })
+
+      // 検討の手が変わっていたら新たに検討させます。
+      if (
+        sabaki.state.analyzingEngineSyncerId != null &&
+        newTreePosition !== sabaki.state.analysisTreePosition
+      ) {
+        sabaki.analyzeMove(newTreePosition)
+      }
     } else if (sabaki.state.mode === 'commentary') {
       // 検討モードでは本譜を読み込み検討エンジンの対象盤面を切り替えつつ
       // 現盤面はそのまま残すようにします。
@@ -180,12 +208,13 @@ export async function reloadRecord(force = false) {
       }
 
       let {newTree, newTreePosition} = aiwith.loadTreeAppend(tree, mainTree)
-      sabaki.setCurrentTreePosition(newTree, sabaki.state.treePosition)
+      sabaki.setCurrentTreePosition(newTree, newTreePosition, {
+        updateAnalyze: false
+      })
 
       // 本譜の最後の手を検討させます。
-      let analyzingEngineSyncer = sabaki.inferredState.analyzingEngineSyncer
       if (
-        analyzingEngineSyncer != null &&
+        sabaki.state.analyzingEngineSyncerId != null &&
         newTreePosition !== sabaki.state.analysisTreePosition
       ) {
         sabaki.analyzeMove(newTreePosition)

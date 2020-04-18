@@ -1507,7 +1507,11 @@ class Sabaki extends EventEmitter {
 
   // Navigation
 
-  setCurrentTreePosition(tree, treePosition, {clearCache = false} = {}) {
+  setCurrentTreePosition(
+    tree,
+    treePosition,
+    {clearCache = false, updateAnalyze = true} = {}
+  ) {
     if (clearCache) gametree.clearBoardCache()
 
     let navigated = treePosition !== this.state.treePosition
@@ -1550,7 +1554,7 @@ class Sabaki extends EventEmitter {
     if (
       syncer != null &&
       navigated &&
-      this.state.mode !== 'commentary' &&
+      updateAnalyze &&
       (this.state.engineGameOngoing == null ||
         ![
           this.state.blackEngineSyncerId,
