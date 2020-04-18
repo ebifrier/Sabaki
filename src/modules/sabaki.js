@@ -24,6 +24,7 @@ deadstones.useFetch('./node_modules/@sabaki/deadstones/wasm/deadstones_bg.wasm')
 
 const {app} = remote
 const setting = remote.require('./setting')
+const dsetting = remote.require('./designsetting')
 const aws = remote.require('./aws')
 
 class Sabaki extends EventEmitter {
@@ -680,6 +681,55 @@ class Sabaki extends EventEmitter {
     this.treeHash = this.generateTreeHash()
     this.fileHash = this.generateFileHash()
 
+    return true
+  }
+
+  loadDesignFile(filename = null) {
+    if (!filename) {
+      let result = dialog.showOpenDialog({
+        properties: ['openFile'],
+        filters: [{name: 'デザイン設定ファイル', extensions: ['json']}]
+      })
+
+      if (!result) return
+      filename = result[0]
+    }
+
+    try {
+      this.setBusy(true)
+      dsetting.load(filename)
+    } catch (err) {
+      dialog.showMessageBox(
+        'デザイン設定ファイルの読み込みに失敗しました。',
+        'error'
+      )
+    }
+
+    this.setBusy(false)
+  }
+
+  saveDesignFile(filename = null) {
+    if (!filename) {
+      let result = dialog.showSaveDialog({
+        filters: [{name: 'デザイン設定ファイル', extensions: ['json']}]
+      })
+
+      if (!result) return false
+      filename = result
+    }
+
+    try {
+      this.setBusy(true)
+      dsetting.save(filename)
+    } catch (err) {
+      dialog.showMessageBox(
+        'デザイン設定ファイルの保存に失敗しました。',
+        'error'
+      )
+      return false
+    } finally {
+      this.setBusy(false)
+    }
     return true
   }
 

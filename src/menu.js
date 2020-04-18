@@ -835,12 +835,6 @@ exports.get = function(props = {}) {
           }
         },
         {
-          label: 'デザインウィンドウを表示',
-          clickMain: 'newDesignWindow',
-          neverDisable: true
-        },
-        {type: 'separator'},
-        {
           label: '解説用サイドバーを表示',
           type: 'checkbox',
           neverDisable: true,
@@ -867,6 +861,20 @@ exports.get = function(props = {}) {
               setting.set('view.leftsidebar_type', 'recording')
             }
           }
+        },
+        {type: 'separator'},
+        {
+          label: 'デザインウィンドウを表示',
+          clickMain: 'newDesignWindow',
+          neverDisable: true
+        },
+        {
+          label: 'デザイン設定を読み込み',
+          click: () => sabaki.loadDesignFile()
+        },
+        {
+          label: 'デザイン設定を保存',
+          click: () => sabaki.saveDesignFile()
         }
       ]
     },

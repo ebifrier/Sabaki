@@ -54,7 +54,9 @@ exports.events = {
 
 exports.load = function(filePath = 'design.json') {
   try {
-    let settingsPath = path.join(setting.userDataDirectory, filePath)
+    let settingsPath = path.isAbsolute(filePath)
+      ? path.normalize(filePath)
+      : path.join(setting.userDataDirectory, filePath)
     settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'))
   } catch (err) {
     settings = {}
@@ -78,7 +80,9 @@ exports.load = function(filePath = 'design.json') {
 }
 
 exports.save = function(filePath = 'design.json') {
-  let settingsPath = path.join(setting.userDataDirectory, filePath)
+  let settingsPath = path.isAbsolute(filePath)
+    ? path.normalize(filePath)
+    : path.join(setting.userDataDirectory, filePath)
   let keys = Object.keys(settings).sort()
 
   fs.writeFileSync(
