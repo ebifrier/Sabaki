@@ -34,7 +34,7 @@ function newWindow(path) {
   window.once('ready-to-show', () => {
     window.show()
     window.webContents.openDevTools()
-    aws.updateState()
+    aws.watchState()
   })
 
   if (setting.get('window.maximized') === true) {

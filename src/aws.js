@@ -206,11 +206,11 @@ let operateAWS = async (updateStateOnly = false) => {
 /**
  * AWSの状態を監視します。
  */
-exports.updateState = async (repeat = true) => {
+exports.watchState = async (repeat = true) => {
   await operateAWS(true)
 
   if (repeat) {
-    setTimeout(() => exports.updateState(repeat), 3000)
+    setTimeout(() => exports.watchState(repeat), 3000)
   }
 }
 
