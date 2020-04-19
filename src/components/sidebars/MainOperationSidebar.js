@@ -2,6 +2,7 @@ import {h, Component} from 'preact'
 import {remote} from 'electron'
 
 import {showOpenDialog} from '../../modules/dialog.js'
+import {ShouldComponentUpdateMixin} from '../../modules/mixins.js'
 import GtpConsole from './GtpConsole.js'
 import i18n from '../../i18n.js'
 
@@ -46,6 +47,14 @@ export class MainOperationSidebar extends Component {
       isOpenFilepath: false,
       isOpenLog: true
     }
+
+    // For shouldComponentUpdate
+    let window = remote.getCurrentWindow()
+    dsetting.events.on(window.id, 'change', ({key, value}) => {
+      let change = []
+      change[key] = value
+      this.setState(change)
+    })
   }
 
   openImagePath() {
@@ -153,7 +162,7 @@ export class MainOperationSidebar extends Component {
           h('input', {
             type: 'text',
             placeholder: t('Path'),
-            defaultValue: dsetting.get('design.background_path'),
+            value: dsetting.get('design.background_path'),
             onChange: evt =>
               dsetting.set('design.background_path', evt.target.value)
           })
@@ -196,7 +205,7 @@ export class MainOperationSidebar extends Component {
           h('input', {
             type: 'text',
             placeholder: t('Path'),
-            defaultValue: dsetting.get('design.whitebar_path'),
+            value: dsetting.get('design.whitebar_path'),
             onChange: evt =>
               dsetting.set('design.whitebar_path', evt.target.value)
           })
@@ -273,7 +282,7 @@ export class MainOperationSidebar extends Component {
             max: 100,
             step: 1,
             disabled: !this.state.testMode,
-            defaultValue: dsetting.get('design.test_winrate'),
+            value: dsetting.get('design.test_winrate'),
             onChange: evt =>
               dsetting.set('design.test_winrate', evt.target.value)
           })
@@ -317,7 +326,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 100,
             step: 0.1,
-            defaultValue: dsetting.get('design.goban_left'),
+            value: dsetting.get('design.goban_left'),
             onChange: evt => dsetting.set('design.goban_left', evt.target.value)
           }),
           h('label', {}, '%')
@@ -331,7 +340,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 100,
             step: 0.1,
-            defaultValue: dsetting.get('design.goban_top'),
+            value: dsetting.get('design.goban_top'),
             onChange: evt => dsetting.set('design.goban_top', evt.target.value)
           }),
           h('label', {}, '%')
@@ -345,7 +354,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 100,
             step: 0.1,
-            defaultValue: dsetting.get('design.goban_right'),
+            value: dsetting.get('design.goban_right'),
             onChange: evt =>
               dsetting.set('design.goban_right', evt.target.value)
           }),
@@ -360,7 +369,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 100,
             step: 0.1,
-            defaultValue: dsetting.get('design.goban_bottom'),
+            value: dsetting.get('design.goban_bottom'),
             onChange: evt =>
               dsetting.set('design.goban_bottom', evt.target.value)
           }),
@@ -390,7 +399,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 2000,
             step: 1,
-            defaultValue: dsetting.get('design.score_blackx'),
+            value: dsetting.get('design.score_blackx'),
             onChange: evt =>
               dsetting.set('design.score_blackx', evt.target.value)
           }),
@@ -405,7 +414,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 2000,
             step: 1,
-            defaultValue: dsetting.get('design.score_blacky'),
+            value: dsetting.get('design.score_blacky'),
             onChange: evt =>
               dsetting.set('design.score_blacky', evt.target.value)
           }),
@@ -420,7 +429,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 2000,
             step: 1,
-            defaultValue: dsetting.get('design.score_whitex'),
+            value: dsetting.get('design.score_whitex'),
             onChange: evt =>
               dsetting.set('design.score_whitex', evt.target.value)
           }),
@@ -435,7 +444,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 2000,
             step: 1,
-            defaultValue: dsetting.get('design.score_whitey'),
+            value: dsetting.get('design.score_whitey'),
             onChange: evt =>
               dsetting.set('design.score_whitey', evt.target.value)
           }),
@@ -450,7 +459,7 @@ export class MainOperationSidebar extends Component {
             min: 0,
             max: 100,
             step: 1,
-            defaultValue: dsetting.get('design.score_fontsize'),
+            value: dsetting.get('design.score_fontsize'),
             onChange: evt =>
               dsetting.set('design.score_fontsize', evt.target.value)
           }),
@@ -494,7 +503,7 @@ export class MainOperationSidebar extends Component {
           h('input', {
             type: 'text',
             placeholder: t('Path'),
-            defaultValue: dsetting.get('record.watch_filepath'),
+            value: dsetting.get('record.watch_filepath'),
             onChange: evt =>
               dsetting.set('record.watch_filepath', evt.target.value)
           })
@@ -523,3 +532,5 @@ export class MainOperationSidebar extends Component {
     )
   }
 }
+
+Object.assign(MainOperationSidebar.prototype, ShouldComponentUpdateMixin)

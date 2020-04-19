@@ -76,6 +76,12 @@ exports.load = function(filePath = 'design.json') {
     delete settings[key]
   }
 
+  // Emit change events
+
+  for (let key in settings) {
+    exports.events.emit('change', {key, value: settings[key]})
+  }
+
   return exports
 }
 

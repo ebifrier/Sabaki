@@ -95,6 +95,7 @@
     "dolm": "^0.7.3-beta",
     "fix-path": "^3.0.0",
     "iconv-lite": "^0.5.1",
+    "immutable": "^4.0.0-rc.12",
     "jimp": "^0.9.8",
     "jschardet": "^2.1.1",
     "natsort": "^2.0.2",
