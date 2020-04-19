@@ -12,6 +12,7 @@ import i18n from '../../i18n.js'
 import sabaki from '../../modules/sabaki.js'
 import {showOpenDialog, showMessageBox} from '../../modules/dialog.js'
 import {noop, isWritableDirectory} from '../../modules/helper.js'
+import {withShouldComponentUpdate} from '../../modules/mixins.js'
 import * as gtplogger from '../../modules/gtplogger.js'
 import Drawer from './Drawer.js'
 
@@ -61,7 +62,7 @@ class PreferencesItem extends Component {
   }
 }
 
-class GeneralTab extends Component {
+class GeneralTab_ extends Component {
   constructor(props) {
     super(props)
 
@@ -308,6 +309,8 @@ class GeneralTab extends Component {
   }
 }
 
+let GeneralTab = withShouldComponentUpdate(GeneralTab_)
+
 class PathInputItem extends Component {
   constructor(props) {
     super(props)
@@ -395,7 +398,7 @@ class PathInputItem extends Component {
   }
 }
 
-class ThemesTab extends Component {
+class ThemesTab_ extends Component {
   constructor() {
     super()
 
@@ -590,6 +593,8 @@ class ThemesTab extends Component {
   }
 }
 
+let ThemesTab = withShouldComponentUpdate(ThemesTab_)
+
 class EngineItem extends Component {
   constructor() {
     super()
@@ -720,7 +725,7 @@ class EngineItem extends Component {
   }
 }
 
-class EnginesTab extends Component {
+class EnginesTab_ extends Component {
   constructor() {
     super()
 
@@ -808,6 +813,8 @@ class EnginesTab extends Component {
     )
   }
 }
+
+let EnginesTab = withShouldComponentUpdate(EnginesTab_)
 
 export default class PreferencesDrawer extends Component {
   constructor() {

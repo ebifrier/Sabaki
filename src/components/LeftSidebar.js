@@ -76,6 +76,7 @@ export default class LeftSidebar extends Component {
 
   render(
     {
+      mode,
       gameTrees,
       gameIndex,
       treePosition,
@@ -149,8 +150,11 @@ export default class LeftSidebar extends Component {
             awsInTransition
           })
         : leftSidebarType === 'commentary'
-        ? h(CommentarySidebar, {})
+        ? h(CommentarySidebar, {
+            mode
+          })
         : h(RecordingSidebar, {
+            mode,
             gameTrees,
             gameIndex,
             treePosition

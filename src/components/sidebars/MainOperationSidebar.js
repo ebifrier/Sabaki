@@ -2,7 +2,7 @@ import {h, Component} from 'preact'
 import {remote} from 'electron'
 
 import {showOpenDialog} from '../../modules/dialog.js'
-import {ShouldComponentUpdateMixin} from '../../modules/mixins.js'
+import {withShouldComponentUpdate} from '../../modules/mixins.js'
 import GtpConsole from './GtpConsole.js'
 import i18n from '../../i18n.js'
 
@@ -33,7 +33,7 @@ export const SettingsHeader = ({
   }
 }
 
-export class MainOperationSidebar extends Component {
+export class MainOperationSidebar_ extends Component {
   constructor(props) {
     super(props)
 
@@ -533,4 +533,6 @@ export class MainOperationSidebar extends Component {
   }
 }
 
-Object.assign(MainOperationSidebar.prototype, ShouldComponentUpdateMixin)
+export let MainOperationSidebar = withShouldComponentUpdate(
+  MainOperationSidebar_
+)

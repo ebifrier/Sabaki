@@ -2,15 +2,16 @@ import {h, Component} from 'preact'
 
 import sgf from '@sabaki/sgf'
 
-import {SettingsHeader} from './MainOperationSidebar.js'
 import sabaki from '../../modules/sabaki'
+import {withShouldComponentUpdate} from '../../modules/mixins.js'
+import {SettingsHeader} from './MainOperationSidebar.js'
 
-export class RecordingSidebar extends Component {
+class RecordingSidebar_ extends Component {
   constructor(props) {
     super(props)
   }
 
-  render({gameTrees, gameIndex, treePosition}) {
+  render({mode, gameTrees, gameIndex, treePosition}) {
     let getNodeText = node => {
       let getDataText = (prefix, data) => {
         let [x, y] = sgf.parseVertex(data)
@@ -44,7 +45,7 @@ export class RecordingSidebar extends Component {
             'button',
             {
               class: 'aiwith-button big primary',
-              disabled: sabaki.state.mode === 'recording',
+              disabled: mode === 'recording',
               onClick: evt => sabaki.setMode('recording')
             },
             '棋譜入力モード'
@@ -91,7 +92,7 @@ export class RecordingSidebar extends Component {
             'button',
             {
               class: 'aiwith-button big danger',
-              disabled: sabaki.state.mode === 'play',
+              disabled: mode === 'play',
               onClick: evt => sabaki.setMode('play')
             },
             '通常モード'
@@ -101,3 +102,5 @@ export class RecordingSidebar extends Component {
     )
   }
 }
+
+export let RecordingSidebar = withShouldComponentUpdate(RecordingSidebar_)

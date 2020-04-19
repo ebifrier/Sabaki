@@ -1,14 +1,15 @@
 import {h, Component} from 'preact'
 
-import {SettingsHeader} from './MainOperationSidebar.js'
 import sabaki from '../../modules/sabaki'
+import {withShouldComponentUpdate} from '../../modules/mixins.js'
+import {SettingsHeader} from './MainOperationSidebar.js'
 
-export class CommentarySidebar extends Component {
+export class CommentarySidebar_ extends Component {
   constructor(props) {
     super(props)
   }
 
-  render() {
+  render({mode}) {
     return h(
       'div',
       {class: 'commentary'},
@@ -26,7 +27,7 @@ export class CommentarySidebar extends Component {
             'button',
             {
               class: 'aiwith-button big primary',
-              disabled: sabaki.state.mode === 'watch',
+              disabled: mode === 'watch',
               onClick: evt => sabaki.setMode('watch')
             },
             '対局観戦モード'
@@ -39,7 +40,7 @@ export class CommentarySidebar extends Component {
             'button',
             {
               class: 'aiwith-button big secondary',
-              disabled: sabaki.state.mode === 'commentary',
+              disabled: mode === 'commentary',
               onClick: evt => sabaki.setMode('commentary')
             },
             '検討モード'
@@ -59,7 +60,7 @@ export class CommentarySidebar extends Component {
             'button',
             {
               class: 'aiwith-button big danger',
-              disabled: sabaki.state.mode === 'play',
+              disabled: mode === 'play',
               onClick: evt => sabaki.setMode('play')
             },
             '通常モード'
@@ -69,3 +70,5 @@ export class CommentarySidebar extends Component {
     )
   }
 }
+
+export let CommentarySidebar = withShouldComponentUpdate(CommentarySidebar_)
