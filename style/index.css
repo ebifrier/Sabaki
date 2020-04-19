@@ -1268,7 +1268,7 @@ header {
 
 .main-operation {
     display: grid;
-    grid-template-rows: repeat(10, auto) 1fr;
+    grid-template-rows: repeat(15, auto) 1fr;
   }
   .main-operation .gtp-console {
     overflow: overlay;
@@ -1310,12 +1310,10 @@ header {
     background-color: rgba(38, 41, 44, .97);
     color: #eee;
     padding: 0.1em 0.3em;
-    display: none;
+    height: 0;
   }
   .settings-list.expanded {
     height: initial;
-    opacity: 1;
-    display: block;
   }
   .settings-list li, .settings-list li:nth-child(2n),
   .settings-list li input {
