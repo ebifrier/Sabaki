@@ -50,11 +50,9 @@ export class MainOperationSidebar_ extends Component {
 
     // For shouldComponentUpdate
     let window = remote.getCurrentWindow()
-    dsetting.events.on(window.id, 'change', ({key, value}) => {
-      let change = []
-      change[key] = value
-      this.setState(change)
-    })
+    dsetting.events.on(window.id, 'change', ({key, value}) =>
+      this.setState({[key]: value})
+    )
   }
 
   openImagePath() {

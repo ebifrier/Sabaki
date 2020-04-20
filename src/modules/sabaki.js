@@ -133,9 +133,7 @@ class Sabaki extends EventEmitter {
     // Bind state of aws to this.
 
     aws.events.on('change', ({key, value}) => {
-      let change = {}
-      change[key] = value
-      this.setState(change)
+      this.setState({[key]: value})
     })
 
     aws.events.on('detachEngine', async () => {
@@ -146,7 +144,7 @@ class Sabaki extends EventEmitter {
 
     // Bind state to settings
 
-    setting.events.on(this.window.id, 'change', ({key, value}) => {
+    setting.events.on(this.window.id, 'change', ({key}) => {
       this.updateSettingState(key)
     })
 
