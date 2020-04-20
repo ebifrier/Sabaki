@@ -160,30 +160,25 @@ class Sabaki extends EventEmitter {
     analysisTreePosition,
     mouseRelativePos
   }) {
-    if (mode != null) {
-      ipcRenderer.send('state-change', {
-        change: {mode}
-      })
+    let change = Object.entries({
+      mode,
+      treePosition,
+      gameIndex,
+      analysis,
+      analysisTreePosition,
+      mouseRelativePos
+    }).reduce(
+      (acc, [key, value]) =>
+        value !== undefined ? {...acc, [key]: value} : acc,
+      {}
+    )
+
+    if (gameTrees != null) {
+      change = {...change, gameRoots: gameTrees.map(tree => tree.root)}
     }
 
-    if (treePosition != null || gameIndex != null || gameTrees != null) {
-      let gameRoots =
-        gameTrees != null ? gameTrees.map(tree => tree.root) : null
-      ipcRenderer.send('state-change', {
-        change: {treePosition, gameIndex, gameRoots}
-      })
-    }
-
-    if (analysis != null && analysisTreePosition != null) {
-      ipcRenderer.send('state-change', {
-        change: {analysis, analysisTreePosition}
-      })
-    }
-
-    if (typeof mouseRelativePos !== 'undefined') {
-      ipcRenderer.send('state-change', {
-        change: {mouseRelativePos}
-      })
+    if (Object.keys(change).length !== 0) {
+      ipcRenderer.send('state-change', {change})
     }
   }
 

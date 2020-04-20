@@ -280,9 +280,20 @@ async function main() {
   ipcMain.on('new-window', (evt, ...args) => newWindow(...args))
   ipcMain.on('build-menu', (evt, ...args) => buildMenu(...args))
   ipcMain.on('check-for-updates', (evt, ...args) => checkForUpdates(...args))
-  ipcMain.on('state-change', (evt, ...args) => {
+
+  let state = {}
+  ipcMain.on('state-change', (evt, {change}) => {
+    Object.assign(state, change)
+
     for (let win of designWindows) {
-      win.webContents.send('state-change', ...args)
+      win.webContents.send('state-change', {change})
+    }
+  })
+  ipcMain.on('get-state', (evt, windowId) => {
+    for (let win of designWindows) {
+      if (win.id === windowId) {
+        win.webContents.send('state-change', {change: state})
+      }
     }
   })
 }

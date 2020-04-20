@@ -47,28 +47,31 @@ class DesignApp extends Component {
     this.whiteBar.onerror = () => this.whiteBar.setAttribute('src', '')
     this.loadImage(this.whiteBar, 'design.whitebar_path')
 
+    sabaki.on('change', ({change, callback}) => {
+      this.setState(change, callback)
+    })
+
     let window = remote.getCurrentWindow()
     dsetting.events.on(window.id, 'change', this.onChangeSetting.bind(this))
 
     ipcRenderer.on('state-change', async (evt, {change}) => {
-      if (change != null && change.gameRoots != null) {
-        change.gameTrees = this.state.gameTrees.map((tree, i) =>
-          this.newTreeFromRoot(tree, change.gameRoots[i])
-        )
+      let {gameRoots} = change
+      if (gameRoots != null) {
+        Object.assign(change, {
+          gameTrees: gameRoots.map(root => gametree.new({root}))
+        })
+        delete change.gameRoots
       }
 
       await this.setState(change)
     })
   }
 
-  newTreeFromRoot(tree, root) {
-    return tree.mutate(draft => {
-      draft.root = root
-      draft._passOnNodeCache = false
-      draft._idAliases = {}
-      draft._heightCache = null
-      draft._structureHashCache = null
-    })
+  componentDidMount() {
+    // mainスレッドのwindowsリストが更新されてから
+    // get-stateイベントを発行します。
+    let window = remote.getCurrentWindow()
+    ipcRenderer.send('get-state', window.id)
   }
 
   async onChangeSetting({key}) {
