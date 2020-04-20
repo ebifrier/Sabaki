@@ -8,7 +8,6 @@ import sabaki from '../modules/sabaki.js'
 import * as gametree from '../modules/gametree.js'
 
 const dsetting = remote.require('./designsetting')
-const setting = remote.require('./setting')
 const CanvasWidth = 1920
 const CanvasHeight = 1080
 
@@ -340,6 +339,8 @@ class DesignApp extends Component {
       gameTrees,
       gameIndex,
       treePosition,
+      showCoordinates,
+      coordinatesType,
       analysis,
       analysisTreePosition,
       boardTransformation,
@@ -398,10 +399,10 @@ class DesignApp extends Component {
 
               // 座標表示はメインと一致させるようにします。
               // そうしないとマウスカーソルの表示位置がずれます。
-              showCoordinates: setting.get('view.show_coordinates'),
-              coordinatesType: setting.get('view.coordinates_type'),
+              showCoordinates: showCoordinates,
+              coordinatesType: coordinatesType,
               showNextMoves: false,
-              showSubMove: true,
+              showSubMove: this.state.mode === 'commentary',
               showSiblings: false,
               fuzzyStonePlacement: false,
               animateStonePlacement: true,
