@@ -142,7 +142,6 @@ export default class LeftSidebar extends Component {
           })
         : leftSidebarType === 'main-operation'
         ? h(MainOperationSidebar, {
-            showLeftSidebar,
             consoleLog,
             attachedEngineSyncers,
             selectedEngineSyncerId,

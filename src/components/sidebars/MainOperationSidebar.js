@@ -76,7 +76,6 @@ export class MainOperationSidebar_ extends Component {
   }
 
   render({
-    showLeftSidebar,
     consoleLog,
     attachedEngineSyncers,
     selectedEngineSyncerId,
@@ -512,7 +511,6 @@ export class MainOperationSidebar_ extends Component {
         title: 'エンジンログ'
       }),
       h(GtpConsole, {
-        show: showLeftSidebar,
         consoleLog,
         attachedEngine: attachedEngineSyncers
           .map(syncer =>
