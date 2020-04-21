@@ -95,6 +95,7 @@ function getEngineAWS() {
  */
 export async function startAnalyzeAWS() {
   if (sabaki.state.analyzingEngineSyncerId != null) return
+  if (sabaki.state.busy) return
   if (aws.get('awsState') !== 'running') return
 
   let engine = getEngineAWS()
@@ -113,12 +114,15 @@ export async function startAnalyzeAWS() {
   }
 
   try {
+    sabaki.setBusy(true)
     await sabaki.attachAndStartAnalysis(engine)
   } catch {
     dialog.showMessageBox(
       i18n.t('menu.engines', 'Initialization of the analysis engine failed.'),
       'error'
     )
+  } finally {
+    sabaki.setBusy(false)
   }
 }
 
