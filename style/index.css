@@ -20,13 +20,10 @@
     bottom: 40px;
     background: #C2CB9C url('../img/ui/tatami.png') center;
   }
-  .watch main {
-    background-image: url('../img/ui/tatami_watch.png');
-  }
-  .commentary main {
+  #main.watch main, #main.commentary main {
     background-image: url('../img/ui/tatami_commentary.png');
   }
-  .recording main {
+  #main.recording main {
     background-image: url('../img/ui/tatami_recording.png');
   }
   #goban {
@@ -35,6 +32,12 @@
   }
   #goban.crosshair {
     cursor: crosshair;
+  }
+  #main.watch #goban {
+    cursor: not-allowed;
+  }
+  #main.watch .shudan-goban-image {
+    background: url(../img/ui/board_watch.png) var(--shudan-board-background-color);
 }
 
 header, #bar .bar {
