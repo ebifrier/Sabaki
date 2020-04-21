@@ -1565,6 +1565,7 @@ class Sabaki extends EventEmitter {
       syncer != null &&
       navigated &&
       updateAnalyze &&
+      this.state.mode !== 'commentary' &&
       (this.state.engineGameOngoing == null ||
         ![
           this.state.blackEngineSyncerId,
