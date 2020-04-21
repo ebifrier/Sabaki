@@ -189,7 +189,7 @@ class App extends Component {
       evt.returnValue = ' '
 
       setTimeout(() => {
-        if (sabaki.askForSave()) {
+        if (sabaki.askForAWS()) {
           sabaki.detachEngines(
             this.state.attachedEngineSyncers.map(syncer => syncer.id)
           )
