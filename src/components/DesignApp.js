@@ -353,7 +353,10 @@ class DesignApp extends Component {
       : gameTree.get(treePosition) != null
       ? gametree.getBoard(gameTree, treePosition)
       : gametree.getBoard(gameTree, gameTree.root.id)
-    analysis = this.getAnalysis(analysis)
+
+    // analysisが途切れた時、勝率50と表示されないようにしています。
+    analysis = this.getAnalysis(analysis || this.prevAnalysis)
+    this.prevAnalysis = analysis
 
     if (this.canvas != null) {
       this.renderCanvas(analysis)
