@@ -1,19 +1,29 @@
 import assert from 'assert'
 import fs from 'fs'
-import * as aiwithgo from '../src/modules/aiwith.js'
+
+import * as aiwith from '../src/modules/aiwith.js'
 
 describe('aiwith', () => {
   let names = ['blank', 'pro', 'beginner', 'shodan']
+  let mainLongPath = `${__dirname}/sgf/branch_main_long.sgf`
+  let mainShortPath = `${__dirname}/sgf/branch_main_short.sgf`
+  let branchPath = `${__dirname}/sgf/branch.sgf`
 
   describe('loadTreeFromData', () => {
     it('load test content', () => {
       for (let name of names) {
         let filename = `${__dirname}/sgf/${name}_game.sgf`
         let content = fs.readFileSync(filename, {encoding: 'utf-8'})
-        let tree = aiwithgo.loadTreeFromData(content)
+        let tree = aiwith.loadTreeFromData(content)
         assert.ok(tree != null)
         assert.ok(tree.mutate != null)
       }
+    })
+
+    it('load error content', () => {
+      assert.equal(aiwith.loadTreeFromData('{test 日本語}'), null)
+      assert.equal(aiwith.loadTreeFromData(''), null)
+      assert.equal(aiwith.loadTreeFromData(null), null)
     })
   })
 
@@ -21,10 +31,16 @@ describe('aiwith', () => {
     it('load test files', () => {
       for (let name of names) {
         let filename = `${__dirname}/sgf/${name}_game.sgf`
-        let tree = aiwithgo.loadTreeFromFile(filename)
+        let tree = aiwith.loadTreeFromFile(filename)
         assert.ok(tree != null)
         assert.ok(tree.mutate != null)
       }
+    })
+
+    it('load non-exist files', () => {
+      assert.equal(aiwith.loadTreeFromFile('unknown.test'), null)
+      assert.equal(aiwith.loadTreeFromFile(''), null)
+      assert.equal(aiwith.loadTreeFromFile(null), null)
     })
   })
 
@@ -44,12 +60,11 @@ describe('aiwith', () => {
         return mains
       }
 
-      let filename = `${__dirname}/sgf/branch.sgf`
-      let tree = aiwithgo.loadTreeFromFile(filename)
+      let tree = aiwith.loadTreeFromFile(branchPath)
       assert.ok(tree != null)
 
-      let mainTree = aiwithgo.loadTreeFromFile(mainFilename)
-      let {newTree} = aiwithgo.loadTreeAppend(tree, mainTree)
+      let mainTree = aiwith.loadTreeFromFile(mainFilename)
+      let {newTree} = aiwith.loadTreeAppend(tree, mainTree)
 
       let mainNodes = Array.from(mainTree.listMainNodes())
       let mains = Array.from(generateMains(mainNodes))
@@ -68,8 +83,109 @@ describe('aiwith', () => {
     }
 
     it('load main variations', () => {
-      testLoadTreeAppend(`${__dirname}/sgf/branch_main_short.sgf`)
-      testLoadTreeAppend(`${__dirname}/sgf/branch_main_long.sgf`)
+      testLoadTreeAppend(mainShortPath)
+      testLoadTreeAppend(mainLongPath)
+    })
+  })
+
+  describe('includeSubTree', () => {
+    let removeNodes = (tree, count) =>
+      tree.mutate(draft => {
+        for (let node of [...tree.listNodes()].reverse()) {
+          if (count <= 0) break
+          draft.removeNode(node, {suppressConfirmation: true})
+        }
+      })
+
+    it('include sub tree with main', () => {
+      let tree = aiwith.loadTreeFromFile(mainLongPath)
+      for (let i = 0; i < 100; ++i) {
+        let subTree = removeNodes(tree, i)
+        assert.ok(aiwith.includeSubTree(tree, subTree))
+        assert.ok(aiwith.includeSubTree(tree, subTree, {checkMain: false}))
+      }
+
+      tree = aiwith.loadTreeFromFile(mainShortPath)
+      for (let i = 0; i < 40; ++i) {
+        let subTree = removeNodes(tree, i)
+        assert.ok(aiwith.includeSubTree(tree, subTree))
+        assert.ok(aiwith.includeSubTree(tree, subTree, {checkMain: false}))
+      }
+    })
+
+    it('include sub tree without main', () => {
+      let tree = aiwith.loadTreeFromFile(mainLongPath, {addToMain: false})
+      for (let i = 0; i < 100; ++i) {
+        let subTree = removeNodes(tree, i)
+        assert.ok(!aiwith.includeSubTree(tree, subTree))
+        assert.ok(aiwith.includeSubTree(tree, subTree, {checkMain: false}))
+      }
+
+      tree = aiwith.loadTreeFromFile(mainShortPath, {addToMain: false})
+      for (let i = 0; i < 40; ++i) {
+        let subTree = removeNodes(tree, i)
+        assert.ok(!aiwith.includeSubTree(tree, subTree))
+        assert.ok(aiwith.includeSubTree(tree, subTree, {checkMain: false}))
+      }
+    })
+
+    it('not include sub tree with main', () => {
+      let tree = aiwith.loadTreeFromFile(mainLongPath, {addToMain: true})
+      let subTree = aiwith.loadTreeFromFile(mainShortPath)
+
+      assert.ok(!aiwith.includeSubTree(tree, subTree, {checkMain: true}))
+      assert.ok(!aiwith.includeSubTree(tree, subTree, {checkMain: false}))
+    })
+
+    it('not include sub tree without main', () => {
+      let tree = aiwith.loadTreeFromFile(mainLongPath)
+      let subTree = aiwith.loadTreeFromFile(mainShortPath)
+
+      assert.ok(!aiwith.includeSubTree(tree, subTree, {checkMain: true}))
+      assert.ok(!aiwith.includeSubTree(tree, subTree, {checkMain: false}))
+    })
+  })
+
+  describe('removeSubNodes', () => {
+    it('not removing nodes', () => {
+      let testNotRemovedNodes = path => {
+        let tree = aiwith.loadTreeFromFile(path)
+        let {newTree, newTreePosition} = aiwith.removeSubNodes(tree)
+        let nodes = [...tree.listNodes()]
+        let newNodes = [...newTree.listNodes()]
+
+        assert.equal(newNodes.length, nodes.length)
+        assert.equal(newTreePosition, newNodes.slice(-1)[0].id)
+      }
+
+      testNotRemovedNodes(mainLongPath)
+      testNotRemovedNodes(mainShortPath)
+    })
+
+    it('remove all nodes', () => {
+      let testRemoveAllNodes = path => {
+        let tree = aiwith.loadTreeFromFile(path, {addToMain: false})
+        let {newTree, newTreePosition} = aiwith.removeSubNodes(tree)
+        let newNodes = [...newTree.listNodes()]
+
+        assert.equal(newNodes.length, 1)
+        assert.equal(newTreePosition, newTree.root.id)
+      }
+
+      testRemoveAllNodes(mainLongPath)
+      testRemoveAllNodes(mainShortPath)
+    })
+
+    it('remove sub nodes', () => {
+      let tree = aiwith.loadTreeFromFile(branchPath)
+      let {newTree, newTreePosition} = aiwith.removeSubNodes(tree)
+      let newNodes = [...newTree.listNodes()]
+      let newCurrentNodes = [
+        ...newTree.listNodesVertically(newTree.root.id, +1, {})
+      ]
+
+      assert.equal(newCurrentNodes.length, newNodes.length)
+      assert.equal(newTreePosition, newCurrentNodes.slice(-1)[0].id)
     })
   })
 })

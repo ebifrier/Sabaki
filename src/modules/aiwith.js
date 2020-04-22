@@ -77,3 +77,46 @@ export function loadTreeAppend(tree, mainTree) {
 
   return {newTree, newTreePosition}
 }
+
+/**
+ * treeにsubTreeのノードが含まれているか調べます。
+ */
+export function includeSubTree(tree, subTree, {checkMain = true} = {}) {
+  let getNextNode = (parent, data) => {
+    for (let child of parent.children) {
+      if (tree.merger(child, data) != null) return child
+    }
+    return null
+  }
+
+  let subTreeNode = subTree.root.children[0]
+  let parentNode = tree.root
+  while (parentNode != null && subTreeNode != null) {
+    let nextNode = getNextNode(parentNode, subTreeNode.data)
+    if (nextNode == null || (checkMain && !nextNode.data.MAIN)) return false
+
+    subTreeNode = subTreeNode.children[0]
+    parentNode = nextNode
+  }
+
+  return true
+}
+
+/**
+ * MAINノード以外のノードを削除します。
+ */
+export function removeSubNodes(tree) {
+  let newTreePosition = null
+  let newTree = tree.mutate(draft => {
+    for (let node of [...tree.listNodes()].reverse()) {
+      if (!!node.data.MAIN) {
+        if (newTreePosition == null) newTreePosition = node.id
+      } else if (node.id !== draft.root.id) {
+        draft.removeNode(node.id)
+      }
+    }
+  })
+
+  newTreePosition = newTreePosition || newTree.root.id
+  return {newTree, newTreePosition}
+}
