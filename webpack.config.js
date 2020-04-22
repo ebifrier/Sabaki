@@ -3,7 +3,8 @@ const path = require('path')
 module.exports = (env, argv) => ({
   entry: {
     'bundle.js': './src/components/App.js',
-    'design.bundle.js': './src/components/DesignApp.js'
+    'design.bundle.js': './src/components/DesignApp.js',
+    'record.bundle.js': './src/recordsaver.js'
   },
 
   output: {
