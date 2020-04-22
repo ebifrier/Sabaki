@@ -193,13 +193,14 @@ export async function reloadRecord(force = false) {
     } else if (mode === 'watch') {
       // 対局観戦モードに移行するとき、すでに棋譜の手が存在する場合は
       // 検討を中断させないよう余計なノードを削除するようにします。
-      let {newTree, newTreePosition} = aiwith.removeSubNodes(tree)
+      let {newTree, newTreePosition} = aiwith.loadTreeAppend(tree, mainTree)
+      newTree = aiwith.removeSubNodes(newTree)
       setTreePositionWithoutAnalysis(newTree, newTreePosition)
     } else if (mode === 'commentary') {
       // 検討モードでは本譜を読み込み検討エンジンの対象盤面を切り替えつつ
       // 現盤面はそのまま残すようにします。
-      let {newTree, newTreePosition} = aiwith.loadTreeAppend(tree, mainTree)
-      setTreePositionWithoutAnalysis(newTree, newTreePosition)
+      let {newTree} = aiwith.loadTreeAppend(tree, mainTree)
+      setTreePositionWithoutAnalysis(newTree, sabaki.state.treePosition)
     } else {
       // 検討盤面と現局面が違うことがあるため念のため合わせておきます。
       setTreePositionWithoutAnalysis(tree, sabaki.state.treePosition)

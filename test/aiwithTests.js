@@ -1,6 +1,7 @@
 import assert from 'assert'
 import fs from 'fs'
 
+import * as gametree from '../src/modules/gametree'
 import * as aiwith from '../src/modules/aiwith.js'
 
 describe('aiwith', () => {
@@ -86,6 +87,15 @@ describe('aiwith', () => {
       testLoadTreeAppend(mainShortPath)
       testLoadTreeAppend(mainLongPath)
     })
+
+    it('append empty tree', () => {
+      let tree = aiwith.loadTreeFromFile(mainLongPath)
+      let emptyTree = gametree.new()
+
+      let {newTree, newTreePosition} = aiwith.loadTreeAppend(tree, emptyTree)
+      assert.ok(!!newTree)
+      assert.equal(newTreePosition, newTree.root.id)
+    })
   })
 
   describe('includeSubTree', () => {
@@ -94,6 +104,7 @@ describe('aiwith', () => {
         for (let node of [...tree.listNodes()].reverse()) {
           if (count <= 0) break
           draft.removeNode(node, {suppressConfirmation: true})
+          count -= 1
         }
       })
 
@@ -150,12 +161,11 @@ describe('aiwith', () => {
     it('not removing nodes', () => {
       let testNotRemovedNodes = path => {
         let tree = aiwith.loadTreeFromFile(path)
-        let {newTree, newTreePosition} = aiwith.removeSubNodes(tree)
+        let newTree = aiwith.removeSubNodes(tree)
         let nodes = [...tree.listNodes()]
         let newNodes = [...newTree.listNodes()]
 
         assert.equal(newNodes.length, nodes.length)
-        assert.equal(newTreePosition, newNodes.slice(-1)[0].id)
       }
 
       testNotRemovedNodes(mainLongPath)
@@ -165,11 +175,10 @@ describe('aiwith', () => {
     it('remove all nodes', () => {
       let testRemoveAllNodes = path => {
         let tree = aiwith.loadTreeFromFile(path, {addToMain: false})
-        let {newTree, newTreePosition} = aiwith.removeSubNodes(tree)
+        let newTree = aiwith.removeSubNodes(tree)
         let newNodes = [...newTree.listNodes()]
 
         assert.equal(newNodes.length, 1)
-        assert.equal(newTreePosition, newTree.root.id)
       }
 
       testRemoveAllNodes(mainLongPath)
@@ -178,14 +187,13 @@ describe('aiwith', () => {
 
     it('remove sub nodes', () => {
       let tree = aiwith.loadTreeFromFile(branchPath)
-      let {newTree, newTreePosition} = aiwith.removeSubNodes(tree)
+      let newTree = aiwith.removeSubNodes(tree)
       let newNodes = [...newTree.listNodes()]
       let newCurrentNodes = [
         ...newTree.listNodesVertically(newTree.root.id, +1, {})
       ]
 
       assert.equal(newCurrentNodes.length, newNodes.length)
-      assert.equal(newTreePosition, newCurrentNodes.slice(-1)[0].id)
     })
   })
 })

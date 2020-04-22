@@ -49,15 +49,7 @@ export function loadTreeFromFile(filename, {addToMain = true} = {}) {
  * 現状のノードツリーは残しつつ、新しいノードを追加で読み込みます。
  */
 export function loadTreeAppend(tree, mainTree) {
-  if (mainTree == null) {
-    return
-  }
-
   let mainTreeNode = mainTree.root.children[0]
-  if (mainTreeNode == null) {
-    return
-  }
-
   let newTreePosition = tree.root.id
   let newTree = tree.mutate(draft => {
     for (let n of tree.listNodes()) {
@@ -106,17 +98,11 @@ export function includeSubTree(tree, subTree, {checkMain = true} = {}) {
  * MAINノード以外のノードを削除します。
  */
 export function removeSubNodes(tree) {
-  let newTreePosition = null
-  let newTree = tree.mutate(draft => {
+  return tree.mutate(draft => {
     for (let node of [...tree.listNodes()].reverse()) {
-      if (!!node.data.MAIN) {
-        if (newTreePosition == null) newTreePosition = node.id
-      } else if (node.id !== draft.root.id) {
+      if (node.id !== draft.root.id && !node.data.MAIN) {
         draft.removeNode(node.id)
       }
     }
   })
-
-  newTreePosition = newTreePosition || newTree.root.id
-  return {newTree, newTreePosition}
 }
