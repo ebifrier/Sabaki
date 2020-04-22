@@ -156,73 +156,53 @@ export function stopRecordWatching() {
  * 強制的に本譜ファイルを再読み込みします。
  */
 export async function reloadRecord(force = false) {
+  let setTreePositionWithoutAnalysis = (newTree, newTreePosition) => {
+    let updateAnalyze =
+      sabaki.state.analyzingEngineSyncerId != null &&
+      newTreePosition !== sabaki.state.analysisTreePosition
+
+    // 検討の手が変わっていたら新たに検討させます。
+    sabaki.setCurrentTreePosition(newTree, newTreePosition, {
+      updateAnalyze
+    })
+  }
+
   let loadRecord = async data => {
     if (!force && data === lastLoadedData) {
       return
     }
+    let {mode, gameTrees, gameIndex} = sabaki.state
+    let tree = gameTrees[gameIndex]
 
-    // 検討モードでのみMAIN属性を使います。
-    let addToMain = ['watch', 'commentary'].includes(sabaki.state.mode)
+    // 対局観戦・検討モードでのみMAIN属性を使います。
+    let addToMain = ['watch', 'commentary'].includes(mode)
     let mainTree = aiwith.loadTreeFromData(data, {addToMain})
     if (mainTree == null) {
       throw new Error('failed to load the record file')
     }
 
-    if (
-      sabaki.state.mode === 'recording' ||
-      (sabaki.state.mode === 'watch' && data !== lastLoadedData)
-    ) {
+    let hasMainTree = aiwith.includeSubTree(tree, mainTree, {checkMain: true})
+
+    if (mode === 'recording' || (mode === 'watch' && !hasMainTree)) {
       // 本譜入力モード、対局観戦モードでは単に棋譜を読み込みます。
       await sabaki.loadGameTrees([mainTree], {
         suppressAskForSave: true,
         clearHistory: true
       })
       sabaki.goToEnd()
-    } else if (sabaki.state.mode === 'watch' && data === lastLoadedData) {
-      // 対局観戦モードに移行するとき、読み込んだ棋譜に変更がなければ
+    } else if (mode === 'watch') {
+      // 対局観戦モードに移行するとき、すでに棋譜の手が存在する場合は
       // 検討を中断させないよう余計なノードを削除するようにします。
-      let tree = sabaki.state.gameTrees[sabaki.state.gameIndex]
-      let newTreePosition = null
-      let newTree = tree.mutate(draft => {
-        for (let node of [...tree.listNodes()].reverse()) {
-          if (!!node.data.MAIN) {
-            if (newTreePosition == null) newTreePosition = node.id
-          } else {
-            draft.removeNode(node.id)
-          }
-        }
-      })
-      sabaki.setCurrentTreePosition(newTree, newTreePosition, {
-        updateAnalyze: false
-      })
-
-      // 検討の手が変わっていたら新たに検討させます。
-      if (
-        sabaki.state.analyzingEngineSyncerId != null &&
-        newTreePosition !== sabaki.state.analysisTreePosition
-      ) {
-        sabaki.analyzeMove(newTreePosition)
-      }
-    } else if (sabaki.state.mode === 'commentary') {
+      let {newTree, newTreePosition} = aiwith.removeSubNodes(tree)
+      setTreePositionWithoutAnalysis(newTree, newTreePosition)
+    } else if (mode === 'commentary') {
       // 検討モードでは本譜を読み込み検討エンジンの対象盤面を切り替えつつ
       // 現盤面はそのまま残すようにします。
-      let tree = sabaki.state.gameTrees[sabaki.state.gameIndex]
-      if (tree == null) {
-        throw new Error('gameTree is null')
-      }
-
       let {newTree, newTreePosition} = aiwith.loadTreeAppend(tree, mainTree)
-      sabaki.setCurrentTreePosition(newTree, newTreePosition, {
-        updateAnalyze: false
-      })
-
-      // 本譜の最後の手を検討させます。
-      if (
-        sabaki.state.analyzingEngineSyncerId != null &&
-        newTreePosition !== sabaki.state.analysisTreePosition
-      ) {
-        sabaki.analyzeMove(newTreePosition)
-      }
+      setTreePositionWithoutAnalysis(newTree, newTreePosition)
+    } else {
+      // 検討盤面と現局面が違うことがあるため念のため合わせておきます。
+      setTreePositionWithoutAnalysis(tree, sabaki.state.treePosition)
     }
 
     console.log('the new record file was loaded')
