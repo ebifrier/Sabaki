@@ -695,6 +695,15 @@ exports.get = function(props = {}) {
                 setting.set('board.show_analysis', true)
                 setting.set('board.analysis_type', 'scoreLead')
               }
+            },
+            {
+              label: '勝率のみを表示',
+              type: 'checkbox',
+              checked: !!showAnalysis && analysisType === 'winrate_only',
+              click: () => {
+                setting.set('board.show_analysis', true)
+                setting.set('board.analysis_type', 'winrate_only')
+              }
             }
           ]
         },
