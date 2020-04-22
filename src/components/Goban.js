@@ -430,8 +430,8 @@ export default class Goban extends Component {
         winrate,
         scoreLead
       } of analysis.variations) {
-        let getWinrateText = (winrate, simple = false) => {
-          return simple
+        let getWinrateText = (winrate, winrateOnly = false) => {
+          return winrateOnly
             ? Math.round(winrate).toString()
             : i18n.formatNumber(winrate) +
                 (Math.floor(winrate) === winrate ? '%' : '')
@@ -471,7 +471,10 @@ export default class Goban extends Component {
 
     return h(BoundedGoban, {
       id: 'goban',
-      class: classNames({crosshair}),
+      class: classNames({
+        crosshair,
+        'shudan-winrate-only': analysisType === 'winrate_only'
+      }),
       style: {top, left},
       innerProps: {ref: el => (this.element = el)},
 

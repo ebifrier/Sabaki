@@ -1603,3 +1603,43 @@ header {
     border-color: transparent;
     color: var(--shudan-white-foreground-color);
 }
+
+.shudan-goban.shudan-winrate-only .shudan-heatlabel {
+    font-size: 0.66em;
+  }
+  .shudan-winrate-only .shudan-vertex.shudan-heat_9 .shudan-heat {
+    opacity: 1.0;
+  }
+
+  .shudan-winrate-only .shudan-vertex.shudan-heat_8 .shudan-heat {
+    opacity: 0.9;
+  }
+
+  .shudan-winrate-only .shudan-vertex.shudan-heat_7 .shudan-heatlabel,
+  .shudan-winrate-only .shudan-vertex.shudan-heat_6 .shudan-heatlabel {
+    opacity: 0.7;
+  }
+  .shudan-winrate-only .shudan-vertex.shudan-heat_7 .shudan-heat,
+  .shudan-winrate-only .shudan-vertex.shudan-heat_6 .shudan-heat {
+    opacity: 0.8;
+  }
+
+  .shudan-winrate-only .shudan-vertex.shudan-heat_5 .shudan-heatlabel,
+  .shudan-winrate-only .shudan-vertex.shudan-heat_4 .shudan-heatlabel {
+    opacity: 0.6;
+  }
+  .shudan-winrate-only .shudan-vertex.shudan-heat_5 .shudan-heat,
+  .shudan-winrate-only .shudan-vertex.shudan-heat_4 .shudan-heat {
+    opacity: 0.7;
+  }
+
+  .shudan-winrate-only .shudan-vertex.shudan-heat_3 .shudan-heatlabel,
+  .shudan-winrate-only .shudan-vertex.shudan-heat_2 .shudan-heatlabel,
+  .shudan-winrate-only .shudan-vertex.shudan-heat_1 .shudan-heatlabel {
+    opacity: 0;
+  }
+  .shudan-winrate-only .shudan-vertex.shudan-heat_3 .shudan-heat,
+  .shudan-winrate-only .shudan-vertex.shudan-heat_2 .shudan-heat,
+  .shudan-winrate-only .shudan-vertex.shudan-heat_1 .shudan-heat {
+    opacity: 0.5;
+  }

@@ -388,7 +388,7 @@ class DesignApp extends Component {
               gameTree,
               treePosition,
               board,
-              analysisType: 'simple',
+              analysisType: 'winrate_only',
               analysis: dsetting.get('design.test_mode')
                 ? analysis
                 : dsetting.get('design.show_heatmap') &&
