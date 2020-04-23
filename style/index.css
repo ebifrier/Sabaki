@@ -35,9 +35,8 @@
   }
   #main.watch #goban {
     cursor: not-allowed;
-  }
-  #main.watch .shudan-goban-image {
     background: url(../img/ui/board_watch.png) var(--shudan-board-background-color);
+    border-color: #926a2a;
 }
 
 header, #bar .bar {
