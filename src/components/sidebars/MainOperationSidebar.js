@@ -390,6 +390,21 @@ export class MainOperationSidebar_ extends Component {
         h(
           'li',
           {},
+          h(
+            'label',
+            {class: 'for-checkbox'},
+            h('input', {
+              type: 'checkbox',
+              checked: dsetting.get('design.show_score'),
+              onChange: evt =>
+                dsetting.set('design.show_score', evt.target.checked)
+            }),
+            'デザイン画面に勝率を表示'
+          )
+        ),
+        h(
+          'li',
+          {},
           h('label', {class: 'mr'}, '黒番の表示位置[X]:'),
           h('input', {
             type: 'number',
