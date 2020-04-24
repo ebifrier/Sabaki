@@ -51,6 +51,7 @@ function newWindow(path) {
   })
 
   window.on('closed', () => {
+    designWindows.forEach(win => win.close())
     window = null
     mainWindow = null
   })
@@ -73,7 +74,6 @@ function newWindow(path) {
 
 function newDesignWindow() {
   let window = new BrowserWindow({
-    parent: mainWindow,
     width: 800,
     height: 600,
     frame: false,
