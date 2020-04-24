@@ -172,7 +172,7 @@ class DesignApp extends Component {
 
   getTestAnalysis() {
     return {
-      sign: -1,
+      sign: +1,
       winrate: dsetting.get('design.test_winrate'),
       variations: [
         {
