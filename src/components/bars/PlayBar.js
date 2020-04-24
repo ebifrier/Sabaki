@@ -4,11 +4,12 @@ import classNames from 'classnames'
 import i18n from '../../i18n.js'
 import sabaki from '../../modules/sabaki.js'
 import * as helper from '../../modules/helper.js'
+import {withShouldComponentUpdate} from '../../modules/mixins.js'
 import TextSpinner from '../TextSpinner.js'
 
 const t = i18n.context('PlayBar')
 
-export default class PlayBar extends Component {
+class PlayBar_ extends Component {
   constructor(props) {
     super(props)
 
@@ -74,10 +75,6 @@ export default class PlayBar extends Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
-    return nextProps.mode !== this.props.mode || nextProps.mode === 'play'
-  }
-
   componentWillReceiveProps(nextProps) {
     for (let i = 0; i < nextProps.engineSyncers.length; i++) {
       if (nextProps.engineSyncers !== this.props.engineSyncers) {
@@ -120,7 +117,7 @@ export default class PlayBar extends Component {
         : awsState === 'running'
         ? {label: 'AWS起動中', color: '#5fd65f'}
         : awsState === 'shutting-down'
-        ? {label: 'AWS削除中', color: '#d3d657'}
+        ? {label: 'AWS停止中', color: '#d3d657'}
         : awsState === 'terminated'
         ? {label: 'AWS未起動', color: 'lightgray'}
         : {label: 'AWSでエラー発生', color: 'orangered'}
@@ -219,3 +216,5 @@ export default class PlayBar extends Component {
     )
   }
 }
+
+export default withShouldComponentUpdate(PlayBar_)
