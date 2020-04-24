@@ -167,7 +167,7 @@ export class MainOperationSidebar_ extends Component {
       ),
 
       h(SettingsHeader, {
-        title: 'その他の画像',
+        title: '白番用の勝率バー画像',
         id: 'image-settings',
         isOpen: this.state.isOpenOtherImage,
         setValue: v => this.setState({isOpenOtherImage: v})
@@ -234,7 +234,7 @@ export class MainOperationSidebar_ extends Component {
               onChange: evt =>
                 dsetting.set('design.black_left', evt.target.checked)
             }),
-            '黒番の評価値を左側に表示'
+            '黒番の勝率を左側に表示'
           )
         ),
         h(
