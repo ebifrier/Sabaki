@@ -122,3 +122,28 @@ export function removeSubNodes(tree) {
     }
   })
 }
+
+/**
+ * 余計な分岐とtreePosition以降の盤面をすべて削除します。
+ */
+export function removeOtherVariations(tree, treePosition, currents = {}) {
+  return tree.mutate(draft => {
+    // 現局面までの分岐を削除します。
+    for (let node of tree.listNodesVertically(treePosition, -1, currents)) {
+      if (node.children.length <= 1) continue
+      let next = tree.navigate(node.id, 1, currents)
+
+      for (let child of node.children) {
+        if (child.id === next.id) continue
+
+        draft.removeNode(child.id)
+      }
+    }
+
+    // 現局面から先のノードをすべて削除します。
+    let node = tree.get(treePosition)
+    for (let child of node.children) {
+      draft.removeNode(child.id)
+    }
+  })
+}

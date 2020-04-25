@@ -43,24 +43,24 @@ export function initialize() {
     }
   })
 
-  let onTreeChanged = () => {
+  sabaki.events.on('navigate', () => {
     if (sabaki.state.mode === 'recording') {
-      // 本譜入力モードでは手が進むと同時に、余計な分岐を削除し
-      // 棋譜をファイルに出力します。
-      sabaki.removeOtherVariations(sabaki.state.treePosition, {
-        suppressConfirmation: true
-      })
+      let {gameTrees, gameIndex, gameCurrents, treePosition} = sabaki.state
 
+      // 現局面以降の手を削除します。
+      let newTree = aiwith.removeOtherVariations(
+        gameTrees[gameIndex],
+        treePosition,
+        gameCurrents[gameIndex]
+      )
+
+      // 棋譜をファイルに出力します。
       let path = designsetting.get('record.watch_filepath')
       if (path != null) {
-        sabaki.saveFile(path, false)
+        aiwith.saveTree(newTree, path)
       }
     }
-  }
-
-  sabaki.events.on('fileLoad', onTreeChanged)
-  sabaki.events.on('moveMake', onTreeChanged)
-  sabaki.events.on('nodeRemove', onTreeChanged)
+  })
 
   // aws.events.on(...)はタイミング的に呼ばれないことがあるため
   // AWSが起動していれば自動的にエンジンを起動します。

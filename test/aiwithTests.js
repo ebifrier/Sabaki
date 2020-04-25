@@ -236,4 +236,77 @@ describe('aiwith', () => {
       assert.equal(newCurrentNodes.length, newNodes.length)
     })
   })
+
+  describe('removeOtherVariations', () => {
+    let testNoBranch = tree => {
+      for (let node of tree.listNodes()) {
+        assert.ok(node.children.length <= 1)
+      }
+    }
+
+    it('remove branch', () => {
+      let tree = aiwith.loadTreeFromFile(branchPath)
+      let lastNode = getLast(tree.listNodesVertically(tree.root.id, +1, {}))
+
+      let newTree = aiwith.removeOtherVariations(tree, lastNode.id)
+      testNoBranch(newTree)
+      assert.equal(newTree.get(lastNode.id).children.length, 0)
+    })
+
+    it('remove root node', () => {
+      let tree = aiwith.loadTreeFromFile(mainLongPath)
+      let newTree = aiwith.removeOtherVariations(tree, tree.root.id)
+
+      testNoBranch(newTree)
+      assert.equal(newTree.root.children.length, 0)
+    })
+
+    it('remove halfway node', () => {
+      let tree = aiwith.loadTreeFromFile(branchPath)
+      let halfwayNode = [...tree.listNodesVertically(tree.root.id, 1, {})][200]
+
+      let newTree = aiwith.removeOtherVariations(tree, halfwayNode.id)
+      testNoBranch(newTree)
+      assert.equal(newTree.get(halfwayNode.id).children.length, 0)
+    })
+
+    function makeCurrents(tree) {
+      let prev = tree.root
+      let currents = {}
+
+      while (prev != null && prev.children.length > 0) {
+        let next = prev.children[Math.min(1, prev.children.length - 1)]
+
+        currents[prev.id] = next.id
+        prev = next
+      }
+
+      return currents
+    }
+
+    it('remove halfway node with currents', () => {
+      let tree = aiwith.loadTreeFromFile(branchPath)
+      let currents = makeCurrents(tree)
+      let halfwayNode = [
+        ...tree.listNodesVertically(tree.root.id, 1, currents)
+      ][2]
+      let newTree = aiwith.removeOtherVariations(tree, halfwayNode.id, currents)
+      let nodes = [...newTree.listNodes()]
+
+      testNoBranch(newTree)
+      assert.equal(newTree.get(halfwayNode.id).children.length, 0)
+      assert.ok(nodes.find(n => n.id === halfwayNode.id))
+    })
+
+    it('remove halfway node of the outside tree with currents', () => {
+      let tree = aiwith.loadTreeFromFile(branchPath)
+      let currents = makeCurrents(tree)
+      let halfwayNode = [...tree.listNodesVertically(tree.root.id, 1, {})][200]
+      let newTree = aiwith.removeOtherVariations(tree, halfwayNode.id, currents)
+      let nodes = [...newTree.listNodes()]
+
+      testNoBranch(newTree)
+      assert.ok(!nodes.find(n => n.id === halfwayNode.id))
+    })
+  })
 })
