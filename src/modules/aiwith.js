@@ -1,4 +1,7 @@
+import fs from 'fs'
 import {extname} from 'path'
+
+import * as sabakiSgf from '@sabaki/sgf'
 
 import * as fileformats from './fileformats/index.js'
 import * as sgf from './fileformats/sgf'
@@ -11,6 +14,19 @@ function addMainProperty(tree) {
       node = node.children[0]
     }
   })
+}
+
+/**
+ * SGFファイルに保存します。
+ */
+export function saveTree(tree, path) {
+  try {
+    let content = sabakiSgf.stringify([tree.root])
+
+    fs.writeFileSync(path, content)
+  } catch (err) {
+    console.log('saveTree error:', err)
+  }
 }
 
 /**

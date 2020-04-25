@@ -38,13 +38,6 @@ let appendNode = ({treeNode, currTree}) => {
   console.log('append tree:', nextNode.data)
 }
 
-function saveRecord() {
-  let {currTree, recordPath} = state
-  let content = sgf.stringify([currTree.root])
-
-  fs.writeFileSync(recordPath, content)
-}
-
 function updateRecord() {
   let {tree, treeNode} = state
 
@@ -54,7 +47,8 @@ function updateRecord() {
     appendNode(state)
   }
 
-  saveRecord()
+  let {currTree, recordPath} = state
+  aiwith.saveTree(currTree, recordPath)
 
   let interval = Math.random() * 5 * 1000
   setTimeout(updateRecord, interval)

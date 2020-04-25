@@ -4,11 +4,51 @@ import fs from 'fs'
 import * as gametree from '../src/modules/gametree'
 import * as aiwith from '../src/modules/aiwith.js'
 
+let getLast = nodes => [...nodes].slice(-1)[0]
+
 describe('aiwith', () => {
   let names = ['blank', 'pro', 'beginner', 'shodan']
   let mainLongPath = `${__dirname}/sgf/branch_main_long.sgf`
   let mainShortPath = `${__dirname}/sgf/branch_main_short.sgf`
   let branchPath = `${__dirname}/sgf/branch.sgf`
+
+  describe('saveTree', () => {
+    const testPath = `${__dirname}/sgf/test.sgf`
+
+    it('save sgf', () => {
+      if (fs.existsSync(testPath)) fs.unlinkSync(testPath)
+      let tree = aiwith.loadTreeFromFile(mainLongPath)
+
+      aiwith.saveTree(tree, testPath)
+      assert.ok(fs.existsSync(testPath))
+
+      let getLastNode = tree => getLast(tree.listNodes())
+      let savedTree = aiwith.loadTreeFromFile(testPath)
+      let board = gametree.getBoard(tree, getLastNode(tree).id)
+      let savedBoard = gametree.getBoard(savedTree, getLastNode(savedTree).id)
+
+      assert.equal(board.diff(savedBoard).length, 0)
+      fs.unlinkSync(testPath)
+    })
+
+    it('overwrite file', () => {
+      let tree = aiwith.loadTreeFromFile(mainLongPath)
+
+      aiwith.saveTree(tree, testPath)
+      aiwith.saveTree(tree, testPath)
+      assert.ok(fs.existsSync(testPath))
+
+      fs.unlinkSync(testPath)
+    })
+
+    it('invalid filepath', () => {
+      let tree = aiwith.loadTreeFromFile(mainLongPath)
+      let invalidPath = '();lkj10294kljdf!"#$%&())'
+
+      aiwith.saveTree(tree, invalidPath)
+      assert.ok(!fs.existsSync(invalidPath))
+    })
+  })
 
   describe('loadTreeFromData', () => {
     it('load test content', () => {
