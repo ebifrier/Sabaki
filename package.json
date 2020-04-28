@@ -68,6 +68,7 @@
       "node_modules/@sabaki/i18n/**/*",
       "node_modules/dolm/**/*",
       "node_modules/{iconv-lite,safer-buffer}/**/*",
+      "node_modules/{aws-sdk,jmespath,xml2js,xmlbuilder,sax}/**/*",
       "node_modules/pikaday/css/*"
     ]
   },
