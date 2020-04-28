@@ -31,12 +31,15 @@
       "artifactName": "sabakiwithai-v${version}-mac-x64.${ext}"
     },
     "win": {
-      "artifactName": "sabakiwithai-v${version}-win.exe"
+      "artifactName": "SavakiWithAI.exe"
     },
     "nsis": {
       "oneClick": false,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true
+    },
+    "directories": {
+      "output": "./dist/tmp"
     },
     "fileAssociations": [
       {
@@ -139,8 +142,10 @@
     "dist:win32-portable": "npm run bundle && electron-builder -w portable --ia32 && node ./ci/mv.js ./dist/sabakiwithai-vx.x.x-win.exe ./dist/sabakiwithai-vx.x.x-win-ia32.exe",
     "dist:win64-portable": "npm run bundle && electron-builder -w portable --x64 && node ./ci/mv.js ./dist/sabakiwithai-vx.x.x-win.exe ./dist/sabakiwithai-vx.x.x-win-x64.exe",
     "dist:win": "npm run dist:win32 && npm run dist:win64 && npm run dist:win32-portable && npm run dist:win64-portable",
+    "testd": "electron-builder --help",
+    "dist": "npm run bundle && electron-builder -w portable --x64 && npm run manual && node ./ci/mv.js ./dist/tmp ./dist/SabakiWithAI-vx.x.x-win-x64",
     "i18n": "node ./ci/createI18n.js",
     "record": "node ./record.bundle.js",
-    "manual": "cd manual && mkdocs build"
+    "manual": "cd manual && mkdocs build -d ../dist/tmp/manual && copy Readme.html \"../dist/tmp/\""
   }
 }
