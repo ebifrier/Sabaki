@@ -77,6 +77,7 @@ function newDesignWindow() {
     width: 800,
     height: 600,
     frame: false,
+    minimizable: false,
     show: false,
     webPreferences: {
       nodeIntegration: true
