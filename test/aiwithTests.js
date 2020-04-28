@@ -43,7 +43,7 @@ describe('aiwith', () => {
 
     it('invalid filepath', () => {
       let tree = aiwith.loadTreeFromFile(mainLongPath)
-      let invalidPath = '();lkj10294kljdf!"#$%&())'
+      let invalidPath = '();lkj10294kljdf!"#$%&())<>/\\'
 
       aiwith.saveTree(tree, invalidPath)
       assert.ok(!fs.existsSync(invalidPath))
