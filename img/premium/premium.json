@@ -1,0 +1,20 @@
+{
+  "design.background_path": "./img/premium/background.png",
+  "design.black_left": true,
+  "design.goban_bottom": "98.1",
+  "design.goban_left": 55,
+  "design.goban_right": "96.8",
+  "design.goban_top": "18.3",
+  "design.score_blackx": "107",
+  "design.score_blacky": "1002",
+  "design.score_fontsize": "46",
+  "design.score_whitex": "927",
+  "design.score_whitey": "1002",
+  "design.show_goban": true,
+  "design.show_heatmap": true,
+  "design.show_score": true,
+  "design.test_mode": false,
+  "design.test_winrate": 50,
+  "design.whitebar_path": "./img/premium/white_bar.png",
+  "record.watch_filepath": "\\\\52.195.6.159\\Share\\test.sgf"
+}

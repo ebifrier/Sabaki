@@ -1,0 +1,20 @@
+{
+  "design.background_path": "E:\\programs\\Sabaki\\img\\ryusei\\background.png",
+  "design.black_left": true,
+  "design.goban_bottom": "96.4",
+  "design.goban_left": "53.4",
+  "design.goban_right": "94.5",
+  "design.goban_top": "13.9",
+  "design.score_blackx": "162",
+  "design.score_blacky": "999",
+  "design.score_fontsize": "42",
+  "design.score_whitex": "878",
+  "design.score_whitey": "999",
+  "design.show_goban": true,
+  "design.show_heatmap": true,
+  "design.show_score": true,
+  "design.test_mode": true,
+  "design.test_winrate": "63",
+  "design.whitebar_path": "E:\\programs\\Sabaki\\img\\ryusei\\white_bar.png",
+  "record.watch_filepath": "\\\\52.195.6.159\\Share\\test.sgf"
+}

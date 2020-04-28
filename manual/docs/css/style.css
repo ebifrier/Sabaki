@@ -1,0 +1,19 @@
+
+img {
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+}
+
+h1 {
+    margin-top: 80px;
+}
+h2, h3 {
+    margin-top: 40px;
+}
+
+.bs-sidenav > li {
+    margin-left: 1em;
+}
+.bs-sidenav > li.main {
+    margin-left: 0;
+}
