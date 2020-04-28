@@ -33,8 +33,11 @@ function newWindow(path) {
 
   window.once('ready-to-show', () => {
     window.show()
-    window.webContents.openDevTools()
     aws.watchState()
+
+    if (setting.get('debug.dev_tools')) {
+      window.webContents.openDevTools()
+    }
   })
 
   if (setting.get('window.maximized') === true) {
@@ -68,7 +71,6 @@ function newWindow(path) {
 
   window.loadURL(`file://${resolve(__dirname, '../index.html')}`)
 
-  //newDesignWindow()
   return window
 }
 
@@ -87,7 +89,10 @@ function newDesignWindow() {
 
   window.once('ready-to-show', () => {
     window.show()
-    window.webContents.openDevTools()
+
+    if (setting.get('debug.dev_tools')) {
+      window.webContents.openDevTools()
+    }
   })
 
   window.on('closed', () => {
