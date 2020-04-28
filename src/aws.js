@@ -1,6 +1,6 @@
 const os = require('os')
 const EventEmitter = require('events')
-const AWS = require('aws-sdk')
+const EC2 = require('aws-sdk/clients/ec2')
 
 const accessKeyId = 'AKIAXZYLHH2VIA67YFOU'
 const secretAccessKey = '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'
@@ -39,14 +39,7 @@ let initializeAWS = () => {
     }
   })
 
-  //AWS.config.loadFromPath
-  AWS.config.update({
-    accessKeyId,
-    secretAccessKey,
-    region
-  })
-
-  ec2 = new AWS.EC2({apiVersion})
+  ec2 = new EC2({apiVersion, accessKeyId, secretAccessKey, region})
 }
 
 exports.events = {
