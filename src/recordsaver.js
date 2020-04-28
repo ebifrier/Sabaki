@@ -1,8 +1,6 @@
-const fs = require('fs')
 const glob = require('glob')
 const {normalize, resolve} = require('path')
 
-const sgf = require('@sabaki/sgf')
 const gametree = require('./modules/gametree')
 const aiwith = require('./modules/aiwith')
 
