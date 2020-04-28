@@ -197,7 +197,7 @@ let defaults = {
   'view.show_leftsidebar': true,
   'view.show_comments': false,
   'view.show_coordinates': true,
-  'view.show_graph': false,
+  'view.show_graph': true,
   'view.show_move_colorization': true,
   'view.show_move_numbers': false,
   'view.show_next_moves': true,
@@ -214,7 +214,7 @@ let defaults = {
   'window.height': 604,
   'window.minheight': 440,
   'window.minwidth': 526,
-  'window.width': 564,
+  'window.width': 1100,
   'window.maximized': false
 }
 
