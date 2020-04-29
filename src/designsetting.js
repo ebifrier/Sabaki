@@ -13,18 +13,18 @@ let defaults = {
   'design.test_mode': false,
   'design.test_winrate': 50,
   'design.show_goban': true,
-  'design.goban_left': 55,
-  'design.goban_top': 18,
-  'design.goban_right': 94,
-  'design.goban_bottom': 90,
+  'design.goban_left': 53.4,
+  'design.goban_top': 13.9,
+  'design.goban_right': 94.5,
+  'design.goban_bottom': 96.4,
   'design.show_score': true,
-  'design.score_blackx': 200,
-  'design.score_blacky': 200,
-  'design.score_whitex': 400,
-  'design.score_whitey': 200,
-  'design.score_fontsize': 30,
-  'design.background_path': './img/premium/background.png',
-  'design.whitebar_path': './img/premium/white_bar.png',
+  'design.score_blackx': 162,
+  'design.score_blacky': 999,
+  'design.score_whitex': 878,
+  'design.score_whitey': 999,
+  'design.score_fontsize': 42,
+  'design.background_path': './img/ryusei/background.png',
+  'design.whitebar_path': './img/ryusei/white_bar.png',
   'record.watch_filepath': null
 }
 
@@ -82,7 +82,7 @@ exports.load = function(filePath = 'design.json') {
     exports.events.emit('change', {key, value: settings[key]})
   }
 
-  return exports
+  return exports.save()
 }
 
 exports.save = function(filePath = 'design.json') {
