@@ -1282,7 +1282,6 @@ header {
 .settings-header {
     background-color: #1e1e1e;
     padding: 0.3em 0.1em 0.1em 0.1em;
-    margin-top: 0.2em;
     color: #eee;
   }
   .settings-header input[type="checkbox"] {
@@ -1313,9 +1312,11 @@ header {
     color: #eee;
     padding: 0.1em 0.3em;
     height: 0;
+    visibility: hidden;
   }
   .settings-list.expanded {
     height: initial;
+    visibility: visible;
   }
   .settings-list li, .settings-list li:nth-child(2n),
   .settings-list li input {
