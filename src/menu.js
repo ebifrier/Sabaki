@@ -897,24 +897,6 @@ exports.get = function(props = {}) {
             version: app.getVersion()
           }),
           enabled: false
-        },
-        {
-          label: i18n.t('menu.help', 'Check for &Updates'),
-          clickMain: 'checkForUpdates',
-          neverDisable: true
-        },
-        {type: 'separator'},
-        {
-          label: i18n.t('menu.help', 'GitHub &Repository'),
-          click: () =>
-            shell.openExternal(`https://github.com/SabakiHQ/${sabaki.appName}`)
-        },
-        {
-          label: i18n.t('menu.help', 'Report &Issue'),
-          click: () =>
-            shell.openExternal(
-              `https://github.com/SabakiHQ/${sabaki.appName}/issues`
-            )
         }
       ]
     },
