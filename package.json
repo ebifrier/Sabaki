@@ -1,6 +1,6 @@
 {
-  "name": "sabakiwithai",
-  "productName": "SabakiWithAI",
+  "name": "sabakiforisc",
+  "productName": "SabakiForISC",
   "version": "1.0.0",
   "description": "An elegant Go/Baduk/Weiqi board and SGF editor for a more civilized age.",
   "author": "Yichuan Shen <shen.yichuan@gmail.com>",
@@ -9,26 +9,26 @@
   "main": "./src/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SabakiHQ/Sabaki"
+    "url": "https://github.com/ebifrier/Sabaki"
   },
   "bugs": {
-    "url": "https://github.com/SabakiHQ/Sabaki/issues"
+    "url": "https://github.com/ebifrier/Sabaki/issues"
   },
   "build": {
-    "appId": "ja.ebifrier.sabakiwithai",
+    "appId": "ja.ebifrier.sabakiforisc",
     "copyright": "Copyright © 2015-2020 Yichuan Shen",
     "compression": "normal",
     "linux": {
       "target": "AppImage",
       "category": "Game",
-      "artifactName": "sabakiwithai-v${version}-linux-${arch}.${ext}"
+      "artifactName": "sabakiforisc-v${version}-linux-${arch}.${ext}"
     },
     "mac": {
       "target": [
         "7z"
       ],
       "category": "public.app-category.board-games",
-      "artifactName": "sabakiwithai-v${version}-mac-x64.${ext}"
+      "artifactName": "sabakiforisc-v${version}-mac-x64.${ext}"
     },
     "win": {
       "artifactName": "SavakiWithAI.exe"
@@ -136,14 +136,14 @@
     "watch-format": "onchange \"**/*.{js,html,md}\" \"!{{dist,i18n}/**,*bundle.js*}\" -- prettier --write {{changed}}",
     "watch": "concurrently \"webpack --mode development --watch\" \"npm run watch-format\" \"cd manual && mkdocs serve\"",
     "dist:macos": "npm run bundle && electron-builder -m --x64",
-    "dist:linux": "npm run bundle && electron-builder -l --ia32 --x64 && node ./ci/mv.js ./dist/sabakiwithai-vx.x.x-linux-i386.AppImage ./dist/sabakiwithai-vx.x.x-linux-ia32.AppImage && node ./ci/mv.js ./dist/sabakiwithai-vx.x.x-linux-x86_64.AppImage ./dist/sabakiwithai-vx.x.x-linux-x64.AppImage",
-    "dist:win32": "npm run bundle && electron-builder -w --ia32 && node ./ci/mv.js ./dist/sabakiwithai-vx.x.x-win.exe ./dist/sabakiwithai-vx.x.x-win-ia32-setup.exe",
-    "dist:win64": "npm run bundle && electron-builder -w --x64 && node ./ci/mv.js ./dist/sabakiwithai-vx.x.x-win.exe ./dist/sabakiwithai-vx.x.x-win-x64-setup.exe",
-    "dist:win32-portable": "npm run bundle && electron-builder -w portable --ia32 && node ./ci/mv.js ./dist/sabakiwithai-vx.x.x-win.exe ./dist/sabakiwithai-vx.x.x-win-ia32.exe",
-    "dist:win64-portable": "npm run bundle && electron-builder -w portable --x64 && node ./ci/mv.js ./dist/sabakiwithai-vx.x.x-win.exe ./dist/sabakiwithai-vx.x.x-win-x64.exe",
+    "dist:linux": "npm run bundle && electron-builder -l --ia32 --x64 && node ./ci/mv.js ./dist/sabakiforisc-vx.x.x-linux-i386.AppImage ./dist/sabakiforisc-vx.x.x-linux-ia32.AppImage && node ./ci/mv.js ./dist/sabakiforisc-vx.x.x-linux-x86_64.AppImage ./dist/sabakiforisc-vx.x.x-linux-x64.AppImage",
+    "dist:win32": "npm run bundle && electron-builder -w --ia32 && node ./ci/mv.js ./dist/sabakiforisc-vx.x.x-win.exe ./dist/sabakiforisc-vx.x.x-win-ia32-setup.exe",
+    "dist:win64": "npm run bundle && electron-builder -w --x64 && node ./ci/mv.js ./dist/sabakiforisc-vx.x.x-win.exe ./dist/sabakiforisc-vx.x.x-win-x64-setup.exe",
+    "dist:win32-portable": "npm run bundle && electron-builder -w portable --ia32 && node ./ci/mv.js ./dist/sabakiforisc-vx.x.x-win.exe ./dist/sabakiforisc-vx.x.x-win-ia32.exe",
+    "dist:win64-portable": "npm run bundle && electron-builder -w portable --x64 && node ./ci/mv.js ./dist/sabakiforisc-vx.x.x-win.exe ./dist/sabakiforisc-vx.x.x-win-x64.exe",
     "dist:win": "npm run dist:win32 && npm run dist:win64 && npm run dist:win32-portable && npm run dist:win64-portable",
     "testd": "electron-builder --help",
-    "dist": "npm run bundle && electron-builder -w portable --x64 && npm run manual && node ./ci/mv.js ./dist/tmp ./dist/SabakiWithAI-vx.x.x-win-x64",
+    "dist": "npm run bundle && electron-builder -w portable --x64 && npm run manual && node ./ci/mv.js ./dist/tmp ./dist/SabakiForISC-vx.x.x-win-x64",
     "i18n": "node ./ci/createI18n.js",
     "record": "node ./record.bundle.js",
     "manual": "cd manual && mkdocs build -d ../dist/tmp/manual && copy Readme.html \"../dist/tmp/\""
