@@ -177,7 +177,7 @@ let defaults = {
   'sgf.format_code': false,
   'sound.capture_delay_max': 500,
   'sound.capture_delay_min': 300,
-  'sound.enable': true,
+  'sound.enable': false,
   'theme.custom_whitestones': null,
   'theme.custom_blackstones': null,
   'theme.custom_board': null,
