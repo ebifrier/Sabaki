@@ -1,4 +1,7 @@
-site_name: AI with Sabaki
+site_name: Sabaki for ISC
+
+theme:
+    name: cinder
 
 extra_css:
     - "./css/style.css"

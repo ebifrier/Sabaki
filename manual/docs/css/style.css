@@ -2,6 +2,7 @@
 img {
     margin-top: 0 !important;
     margin-bottom: 8px !important;
+    max-width: 100%;
 }
 
 h1 {
@@ -10,10 +11,13 @@ h1 {
 h2, h3 {
     margin-top: 40px;
 }
-
-.bs-sidenav > li {
-    margin-left: 1em;
+h1:first-child {
+    margin-top: 40px;
 }
-.bs-sidenav > li.main {
+
+.bs-sidenav > li.main, .bs-sidenav > li.first-level {
     margin-left: 0;
+}
+.bs-sidenav > li, .bs-sidenav > li.second-level {
+    margin-left: 1em;
 }
