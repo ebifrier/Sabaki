@@ -13,7 +13,7 @@ printSetOutputs({
   tag: (process.env.GITHUB_REF || '').replace('refs/tags/', ''),
   ci: path.resolve(process.cwd(), './ci'),
   distcommand: {
-    win32: 'dist:win',
+    win32: 'dist',
     linux: 'dist:linux',
     darwin: 'dist:macos'
   }[os.platform()]

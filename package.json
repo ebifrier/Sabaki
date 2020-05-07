@@ -143,7 +143,7 @@
     "dist:win64-portable": "npm run bundle && electron-builder -w portable --x64 && node ./ci/mv.js ./dist/sabakiforisc-vx.x.x-win.exe ./dist/sabakiforisc-vx.x.x-win-x64.exe",
     "dist:win": "npm run dist:win32 && npm run dist:win64 && npm run dist:win32-portable && npm run dist:win64-portable",
     "testd": "electron-builder --help",
-    "dist": "npm run bundle && electron-builder -w portable --x64 && npm run manual && node ./ci/mv.js ./dist/tmp ./dist/SabakiForISC-vx.x.x-win-x64",
+    "dist": "npm run bundle && electron-builder -w portable --x64 && npm run manual && del /s /q \"dist/tmp/win-unpacked\" \"dist/*.yaml\" && \"*.yaml\" && node ./ci/mv.js ./dist/tmp ./dist/SabakiForISC-vx.x.x-win-x64",
     "i18n": "node ./ci/createI18n.js",
     "record": "node ./record.bundle.js",
     "manual": "cd manual && mkdocs build -d ../dist/tmp/manual && copy Readme.html \"../dist/tmp/\""
