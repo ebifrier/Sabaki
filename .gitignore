@@ -2,6 +2,7 @@ dist/
 i18n/
 engines/
 node_modules/
+manual/site/
 
 bundle.js
 bundle.js.map

@@ -31,15 +31,12 @@
       "artifactName": "sabakiforisc-v${version}-mac-x64.${ext}"
     },
     "win": {
-      "artifactName": "SavakiWithAI.exe"
+      "artifactName": "SavakiForISC.exe"
     },
     "nsis": {
       "oneClick": false,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true
-    },
-    "directories": {
-      "output": "./dist/tmp"
     },
     "fileAssociations": [
       {
@@ -73,6 +70,16 @@
       "node_modules/{iconv-lite,safer-buffer}/**/*",
       "node_modules/{aws-sdk,jmespath,xml2js,xmlbuilder,sax}/**/*",
       "node_modules/pikaday/css/*"
+    ],
+    "extraFiles": [
+      {
+        "from": "manual/Readme.html",
+        "to": "Readme.html"
+      },
+      {
+        "from": "manual/site",
+        "to": "manual"
+      }
     ]
   },
   "prettier": {
@@ -113,6 +120,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "archiver": "^4.0.1",
     "concurrently": "^5.1.0",
     "electron": "^8.2.1",
     "electron-builder": "^22.4.1",
@@ -142,10 +150,9 @@
     "dist:win32-portable": "npm run bundle && electron-builder -w portable --ia32 && node ./ci/mv.js ./dist/sabakiforisc-vx.x.x-win.exe ./dist/sabakiforisc-vx.x.x-win-ia32.exe",
     "dist:win64-portable": "npm run bundle && electron-builder -w portable --x64 && node ./ci/mv.js ./dist/sabakiforisc-vx.x.x-win.exe ./dist/sabakiforisc-vx.x.x-win-x64.exe",
     "dist:win": "npm run dist:win32 && npm run dist:win64 && npm run dist:win32-portable && npm run dist:win64-portable",
-    "testd": "electron-builder --help",
-    "dist": "npm run bundle && electron-builder -w portable --x64 && npm run manual && del /s /q \"dist/tmp/win-unpacked\" \"dist/*.yaml\" && \"*.yaml\" && node ./ci/mv.js ./dist/tmp ./dist/SabakiForISC-vx.x.x-win-x64",
+    "dist:isc": "npm run manual && npm run bundle && electron-builder -w dir --x64 && node ./ci/mv.js ./dist/win-unpacked ./dist/SabakiForISC-vx.x.x-win-x64 && node ./ci/zip.js ./dist/SabakiForISC-vx.x.x-win-x64",
     "i18n": "node ./ci/createI18n.js",
     "record": "node ./record.bundle.js",
-    "manual": "cd manual && mkdocs build -d ../dist/tmp/manual && copy Readme.html \"../dist/tmp/\""
+    "manual": "cd manual && mkdocs build"
   }
 }
