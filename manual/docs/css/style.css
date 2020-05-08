@@ -1,4 +1,8 @@
 
+html {
+    font-family: 'ヒラギノ角ゴ ProN', 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+}
+
 img {
     margin-top: 0 !important;
     margin-bottom: 8px !important;
@@ -12,7 +16,7 @@ h2, h3 {
     margin-top: 40px;
 }
 h1:first-child {
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 .bs-sidenav > li.main, .bs-sidenav > li.first-level {
